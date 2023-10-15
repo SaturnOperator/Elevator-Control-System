@@ -7,22 +7,23 @@
 
 class Elevator {
     public:
-        Elevator();
+        Elevator(int maxLoad);
 
         // User Actions
-        bool closeDoors();
-        bool openDoors();
-        bool requestFloor(Floor f);
-        void requestHelp();
+        bool closeDoors(); // Triggered by button or automatically, attempts to close door returns false and triggers obstruction if fails
+        bool openDoors(); // Triggered by button or automatically
+        bool requestFloor(Floor f); // Floor f button pressed
+        void helpButton(); // Help button pressed
 
         // System Actions
-        bool fulfillRequest();
-        void preFlightCheck(); // Checks sensors
-        bool flagEmergency(EmergencyStatus e);
+        bool fulfillRequest(); // Ascends/Descends one floor towards nearest floor requests 
+        void alertECS();
+        bool flagEmergency(EmergencyStatus e); // Appends emergency code to emergencyStatus
         bool clearEmergency(EmergencyStatus e);
         bool addFloorRequest(Floor f);
-        bool overrideGoToFloor(Floor f);
+        bool overrideGoToFloor(Floor f); // Bypasses all requests and goes to floor f
         void updateDisplay(Floor f);
+        bool pollObstructionSensor(); // False if no obstruction, true otherwise
 
         // Getters
         Floor getFloor() const;
@@ -31,6 +32,10 @@ class Elevator {
         ElevatorStatus getStatus() const;
         EmergencyStatus getEmergencyStatus() const;
         Display* getDisplay();
+
+        // Other
+        bool underLimit(); // Checks if load is under the limit
+        void kickPassengersOut(); // Alleviates load from the elevator
 
     private:
         Floor floor;
@@ -41,7 +46,10 @@ class Elevator {
         std::vector<Floor> requests;
         Display* display;
 
-        bool setStatus(ElevatorStatus e);
+        int load;
+        int maxLoad;
+
+        bool setStatus(ElevatorStatus e); // Idle, moving or error
 
 };
 

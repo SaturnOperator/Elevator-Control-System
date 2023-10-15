@@ -1,6 +1,7 @@
 ### **Safety Scenario: ** Door Obstruction
 
-- Elevator will attempt to close the door, `closeDoor()` will check safety sensors such as the light curtain obstruction sensor, as well as the overload sensor. If any of these sensors are triggered `closeDoor()` fails and returns false, flagging an emergency and alerting the ECS. Elevator gets set to `ElevatorStatus::ERROR` and will remain non-operational. At this point the ECS will keep checking the obstruction sensor until the obstruction has been cleared. The ECS will clear the emergency flags the elevator is deemed safe (obstruction cleared) and the elevator will return back to an operating state.
+- When A elevator `flagEmergency(EmergencyStatus::HELP)` 
+- 
 
 ```mermaid
 sequenceDiagram
@@ -12,7 +13,7 @@ sequenceDiagram
 
 	activate elevator1#colon;Elevator()
 	elevator1#colon;Elevator()->>	elevator1#colon;Elevator(): closeDoor()
-	note right of elevator1#colon;Elevator(): when closeDoor() returns false door obstruction is triggered
+	
  elevator1#colon;Elevator()->>elevator1#colon;Elevator(): flagEmergency(EmergencyStatus e)
 	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatus e)
 	elevator1#colon;Elevator()->>ecs#colon;ElevatorControlSystem(): alertECS()
@@ -24,20 +25,14 @@ sequenceDiagram
 	
 		
 	elevator1#colon;Elevator()->>display#colon;Display(): displayWarning(EmergencyStatus e)
-	
 	deactivate elevator1#colon;Elevator()
 	activate display#colon;Display()
 	deactivate display#colon;Display()
-	
-		activate elevator1#colon;Elevator()
-	loop Until checkObstruction() returns false
-		ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): pollObstructionSensor()
-	end
 
 	
 	
 	
-
+	activate elevator1#colon;Elevator()
 	ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): clearEmergency(EmergencyStatus e)
 	deactivate ecs#colon;ElevatorControlSystem()
 	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatus e)
