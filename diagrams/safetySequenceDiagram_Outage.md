@@ -1,45 +1,85 @@
-### **Safety Scenario: ** Door Obstruction
+### **Safety Scenario: ** Power Outage
 
-- When A elevator `flagEmergency(EmergencyStatus::HELP)` 
-- 
+- Passenger
 
 ```mermaid
 sequenceDiagram
 
-	participant elevator1#colon;Elevator()
-	participant display#colon;Display()
-	participant ecs#colon;ElevatorControlSystem()
+  	participant elevator1#colon;Elevator()
+  	participant display1#colon;Display()
+  	participant elevator2#colon;Elevator()
+  	participant display2#colon;Display()
+ 		participant ecs#colon;ElevatorControlSystem()
+  	
+  	activate ecs#colon;ElevatorControlSystem()
+  	ecs#colon;ElevatorControlSystem()-)ecs#colon;ElevatorControlSystem(): outageSafetySequence()
+  	
+  	ecs#colon;ElevatorControlSystem()-)elevator1#colon;Elevator(): flagEmergency(EmergencyStatus::OUTAGE)
+  	  activate elevator1#colon;Elevator()
+  	ecs#colon;ElevatorControlSystem()-)elevator2#colon;Elevator(): flagEmergency(EmergencyStatus::OUTAGE)
 
-
-	activate elevator1#colon;Elevator()
-	elevator1#colon;Elevator()->>	elevator1#colon;Elevator(): closeDoor()
-	
- elevator1#colon;Elevator()->>elevator1#colon;Elevator(): flagEmergency(EmergencyStatus e)
-	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatus e)
-	elevator1#colon;Elevator()->>ecs#colon;ElevatorControlSystem(): alertECS()
-	activate ecs#colon;ElevatorControlSystem()
-	
-	
-	
-	
-	
+		activate elevator2#colon;Elevator()
+  	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatus e)
+		elevator2#colon;Elevator()->>elevator2#colon;Elevator(): setStatus(ElevatorStatus e)
 		
-	elevator1#colon;Elevator()->>display#colon;Display(): displayWarning(EmergencyStatus e)
-	deactivate elevator1#colon;Elevator()
-	activate display#colon;Display()
-	deactivate display#colon;Display()
+		elevator1#colon;Elevator()->>display1#colon;Display(): displayWarning(EmergencyStatus e)
+	activate display1#colon;Display()
+	
+		elevator2#colon;Elevator()->>display2#colon;Display(): displayWarning(EmergencyStatus e)
+	activate display2#colon;Display()
+	
+	ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): kickPassengersOut()
+	ecs#colon;ElevatorControlSystem()->>elevator2#colon;Elevator(): kickPassengersOut()
+	
+	display1#colon;Display()->>display1#colon;Display(): playDisembarkMessage()
+	deactivate display1#colon;Display()
+	
+		display2#colon;Display()->>display2#colon;Display(): playDisembarkMessage()
+	deactivate display2#colon;Display()
+	
+	
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): closeDoors()
+	elevator2#colon;Elevator()->>elevator2#colon;Elevator(): closeDoors()
+	
+	ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): overrideGoToFloor(Floor::FLOOR_GROUND)
+	ecs#colon;ElevatorControlSystem()->>elevator2#colon;Elevator(): overrideGoToFloor(Floor::FLOOR_GROUND)
+	
+	
+  	
+  	deactivate elevator1#colon;Elevator()
+		deactivate elevator2#colon;Elevator()
+  	
+  	deactivate ecs#colon;ElevatorControlSystem()
+  	
+  	
+  	
+  	opt Outage is addressed, reset elevators
+  	 	activate ecs#colon;ElevatorControlSystem()
+  		ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): clearEmergency(EmergencyStatus e)
+  		activate elevator1#colon;Elevator()
+		ecs#colon;ElevatorControlSystem()->>elevator2#colon;Elevator(): clearEmergency(EmergencyStatus e)
+		activate elevator2#colon;Elevator()
+	
+			deactivate ecs#colon;ElevatorControlSystem()
+elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatus e)
 
-	
-	
-	
-	activate elevator1#colon;Elevator()
-	ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): clearEmergency(EmergencyStatus e)
-	deactivate ecs#colon;ElevatorControlSystem()
-	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatus e)
-	
-	
-	elevator1#colon;Elevator()->>display#colon;Display(): displayWarning(EmergencyStatus e)
-	activate display#colon;Display()
-	deactivate display#colon;Display()
-	deactivate elevator1#colon;Elevator()
+
+      elevator1#colon;Elevator()->>display1#colon;Display(): displayWarning(EmergencyStatus e)
+      activate display1#colon;Display()
+      deactivate display1#colon;Display()
+      deactivate elevator1#colon;Elevator()
+      
+      elevator2#colon;Elevator()->>elevator2#colon;Elevator(): setStatus(ElevatorStatus e)
+      elevator2#colon;Elevator()->>display2#colon;Display(): displayWarning(EmergencyStatus e)
+      activate display2#colon;Display()
+      deactivate display2#colon;Display()
+      deactivate elevator2#colon;Elevator()
+  	end
 ```
+
+
+
+
+
+
+

@@ -8,94 +8,94 @@
 ```mermaid
 sequenceDiagram
 
-	participant Passenger
-  participant Elevator
-  participant Display
-  participant Elevator Control System
+	participant passenger1#colon;Passenger()
+  	participant elevator1#colon;Elevator()
+  	participant display#colon;Display()
+ 	participant ecs#colon;ElevatorControlSystem()
   
   
-	Passenger-)Elevator Control System: callElevator(Floor f, Direction dir)
-	activate Elevator Control System
-	Elevator Control System->>Elevator Control System: requestFloor(Floor f, Direction dir)
+	passenger1#colon;Passenger()-)ecs#colon;ElevatorControlSystem(): callElevator(Floor f, Direction dir)
+	activate ecs#colon;ElevatorControlSystem()
+	ecs#colon;ElevatorControlSystem()->>ecs#colon;ElevatorControlSystem(): requestFloor(Floor f, Direction dir)
 	
 	
-	Elevator Control System-)Elevator Control System: updateButtons()
-	Elevator Control System->>Elevator Control System: findElevator()
-	Elevator Control System-)Elevator: sendElevator(Elevator e, Floor f)
+	ecs#colon;ElevatorControlSystem()-)ecs#colon;ElevatorControlSystem(): updateButtons()
+	ecs#colon;ElevatorControlSystem()->>ecs#colon;ElevatorControlSystem(): findElevator()
+	ecs#colon;ElevatorControlSystem()-)elevator1#colon;Elevator(): sendElevator(Elevator e, Floor f)
 	
 	
-	activate Elevator
-	Elevator->>Elevator: addFloorRequest(Floor f)
-	deactivate Elevator Control System
+	activate elevator1#colon;Elevator()
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): addFloorRequest(Floor f)
+	deactivate ecs#colon;ElevatorControlSystem()
 	
 	%% Move to floor f loop
-	activate Elevator Control System
-	deactivate Elevator
-	activate Elevator
+	activate ecs#colon;ElevatorControlSystem()
+	deactivate elevator1#colon;Elevator()
+	activate elevator1#colon;Elevator()
 	loop Move towards requested Floor f
-		Elevator Control System->>Elevator: pollRequests()
-		deactivate Elevator Control System
-    Elevator->>Elevator: fulfillRequest()
-    Elevator->>Display: updateDisplay(Floor f)
+		ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): pollRequests()
+		deactivate ecs#colon;ElevatorControlSystem()
+    elevator1#colon;Elevator()->>elevator1#colon;Elevator(): fulfillRequest()
+    elevator1#colon;Elevator()->>display#colon;Display(): updatedisplay#colon;Display()(Floor f)
 
-    activate Display
-    Display->>Display: updateFloor(Floor f)
-    Display->>-Display: ringBell()
-    Elevator-->>Elevator Control System: pollRequests()
-    activate Elevator Control System
+    activate display#colon;Display()
+    display#colon;Display()->>display#colon;Display(): updateFloor(Floor f)
+    display#colon;Display()->>-display#colon;Display(): ringBell()
+    elevator1#colon;Elevator()-->>ecs#colon;ElevatorControlSystem(): pollRequests()
+    activate ecs#colon;ElevatorControlSystem()
 	end
-	Elevator->>Elevator: openDoors()
-	deactivate Elevator
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): openDoors()
+	deactivate elevator1#colon;Elevator()
 	
-	Elevator Control System-)Elevator Control System: updateButtons()
-	deactivate Elevator Control System
+	ecs#colon;ElevatorControlSystem()-)ecs#colon;ElevatorControlSystem(): updateButtons()
+	deactivate ecs#colon;ElevatorControlSystem()
 	
 	
-	Passenger->>Elevator: enterElevator(Elevator e)
-	activate Elevator
+	passenger1#colon;Passenger()->>elevator1#colon;Elevator(): enterElevator(Elevator e)
+	activate elevator1#colon;Elevator()
 	opt Door Open Button Pressed
-		Elevator->>Elevator: openDoors()
+		elevator1#colon;Elevator()->>elevator1#colon;Elevator(): openDoors()
 	end
-	Elevator->>Elevator: closeDoors()
-	deactivate Elevator
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): closeDoors()
+	deactivate elevator1#colon;Elevator()
 	
 	
-	Passenger-)Elevator: pressFloorButton(Floor f)
-	activate Elevator
-	Elevator->>Elevator: addFloorRequest(Floor f)
-	Elevator-->>Elevator Control System: pollRequests()
+	passenger1#colon;Passenger()-)elevator1#colon;Elevator(): pressFloorButton(Floor f)
+	activate elevator1#colon;Elevator()
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): addFloorRequest(Floor f)
+	elevator1#colon;Elevator()-->>ecs#colon;ElevatorControlSystem(): pollRequests()
 	
 	
 
 
 	%% Move to floor f loop
-	activate Elevator Control System
-	Elevator Control System-)Elevator Control System: updateButtons()
-	deactivate Elevator
-	activate Elevator
+	activate ecs#colon;ElevatorControlSystem()
+	ecs#colon;ElevatorControlSystem()-)ecs#colon;ElevatorControlSystem(): updateButtons()
+	deactivate elevator1#colon;Elevator()
+	activate elevator1#colon;Elevator()
 	loop Move towards requested Floor f
-		Elevator Control System->>Elevator: pollRequests()
-		deactivate Elevator Control System
-    Elevator->>Elevator: fulfillRequest()
-    Elevator->>Display: updateDisplay(Floor f)
+		ecs#colon;ElevatorControlSystem()->>elevator1#colon;Elevator(): pollRequests()
+		deactivate ecs#colon;ElevatorControlSystem()
+    elevator1#colon;Elevator()->>elevator1#colon;Elevator(): fulfillRequest()
+    elevator1#colon;Elevator()->>display#colon;Display(): updatedisplay#colon;Display()(Floor f)
 
-    activate Display
-    Display->>Display: updateFloor(Floor f)
-    Display->>-Display: ringBell()
-    Elevator-->>Elevator Control System: pollRequests()
-    activate Elevator Control System
+    activate display#colon;Display()
+    display#colon;Display()->>display#colon;Display(): updateFloor(Floor f)
+    display#colon;Display()->>-display#colon;Display(): ringBell()
+    elevator1#colon;Elevator()-->>ecs#colon;ElevatorControlSystem(): pollRequests()
+    activate ecs#colon;ElevatorControlSystem()
 	end
-	Elevator->>Elevator: openDoors()
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): openDoors()
 	
-	deactivate Elevator
+	deactivate elevator1#colon;Elevator()
 	
-	Elevator Control System-)Elevator Control System: updateButtons()
-	deactivate Elevator Control System
+	ecs#colon;ElevatorControlSystem()-)ecs#colon;ElevatorControlSystem(): updateButtons()
+	deactivate ecs#colon;ElevatorControlSystem()
 	
-	Passenger->>Elevator: exitElevator()
-	activate Elevator
-	Elevator->>Elevator: closeDoors()
-	deactivate Elevator
+	passenger1#colon;Passenger()->>elevator1#colon;Elevator(): exitElevator()
+	activate elevator1#colon;Elevator()
+	elevator1#colon;Elevator()->>elevator1#colon;Elevator(): closeDoors()
+	deactivate elevator1#colon;Elevator()
 	
 ```
 

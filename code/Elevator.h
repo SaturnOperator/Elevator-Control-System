@@ -35,7 +35,7 @@ class Elevator {
 
         // Other
         bool underLimit(); // Checks if load is under the limit
-        void kickPassengersOut(); // Alleviates load from the elevator
+        void kickPassengersOut();
 
     private:
         Floor floor;

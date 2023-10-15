@@ -16,6 +16,7 @@ class Display {
         
         void displayWarning(EmergencyStatus e);
         void clearDisplay();
+        void playDisembarkMessage();
 
     private:
         Floor floor;
