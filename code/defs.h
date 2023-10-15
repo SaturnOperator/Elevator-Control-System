@@ -5,33 +5,33 @@
 #define NUM_FLOORS 4
 
 enum class Direction {
-	NONE	= 0x0,
-	DOWN	= 0x1,
-	UP		= 0x2
+    NONE  = 0x0,
+    DOWN  = 0x1,
+    UP    = 0x2
 };
 
 enum class DoorStatus {
-	CLOSE, OPEN
+    CLOSE, OPEN
 };
 
 enum class ElevatorStatus {
-	IDLE	= 0x0, 
-	MOTION	= 0x1, 
-	ERROR	= 0x2
+    IDLE    = 0x0, 
+    MOTION  = 0x1, 
+    ERROR   = 0x2
 };
 
 // Bit flags as elevator can have multiple concurrent errors  
 enum class EmergencyStatus {
-	NONE 		= 0x0,
-	HELP 		= 0x1,
-	OBSTRUCTION = 0x2,
-	OVERLOAD 	= 0x4,
-	FIRE 		= 0x8,
-	OUTAGE 		= 0x10
+    NONE         = 0x0,
+    HELP         = 0x1,
+    OBSTRUCTION  = 0x2,
+    OVERLOAD     = 0x4,
+    FIRE         = 0x8,
+    OUTAGE       = 0x10
 };
 
 enum class Floor {
-	FLOOR_NONE, FLOOR_GROUND, FLOOR_2, FLOOR_3, FLOOR_4
+    FLOOR_NONE, FLOOR_GROUND, FLOOR_2, FLOOR_3, FLOOR_4
 };
 
 #endif
