@@ -1,0 +1,20 @@
+## Traceability Matrix
+
+| Id   | Requirement                                                  | Related Use Case                    | Fullfilled By                                   | Description                                                  |
+| ---- | ------------------------------------------------------------ | ----------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ |
+| 01   | Elevator responds to external floor buttons                  | Passenger uses elevator             | `ElevatorControlSystem::elevatorRequest()`      | Allows the elevator to respond to external floor buttons     |
+| 02   | Elevator responds to internal floor buttons                  | Passenger uses elevator             | `Elevator::addFloorRequest()`                   | Allows the elevator to respond to floor buttons in the elevator |
+| 03   | Elevator moves between floors                                | Passenger uses elevator             | `Elevator::fulfillRequest()`                    | This ensures the elevator car can move between one floor to another by handling the requests |
+| 04   | Elevator can open its doors                                  | Passenger uses elevator             | `Elevator::openDoors()`                         | Ensures elevator can open its doors                          |
+| 05   | Elevator can close its doors                                 | Passenger uses elevator             | `Elevator::closeDoors()`                        | Ensures elevator can close its doors                         |
+| 06   | Elevator goes to ground floor during fire alarm              | Fire alarm from building            | `ElevatorControlSystem::fireSafetySequence()`   | Allows for proper safety protocol during a fire alarm        |
+| 07   | Elevator goes to ground floor during power outage            | Power outage in the building        | `ElevatorControlSystem::outageSafetySequence()` | Allows for proper safety protocol during a fire outage       |
+| 08   | Help button triggers emergency response                      | Control system receives Help signal | `ElevatorControlSystem::helpSafetySequence()`   | Allows the system to respond to help calls                   |
+| 09   | Door obstacle prevents door from closing                     | Door obstacle detected              | `Elevator::pollObstructionSensor()`             | Ensures doors don't close when there is something obstructing the door from closing |
+| 10   | Overload limit in elevator                                   | Overload detected                   | `Elevator::underLimit()`                        | Ensures the elevator doesn't move when it surpasses the load limit |
+| 11   | Update display floor number                                  | Many                                | `Elevator::updateDisplay()`                     | Ensures the elevator's display shows the according floor number |
+| 12   | Show warnings on the display                                 | many                                | `Display::displayWarning()`                     | Ensures elevator's display shows the appropriate warning to the car passengers |
+| 13   | Play disembark message                                       | many                                | `Display::playDisembarkMessage()`               | Allows the elevator to ask passengers to disembark during emergency situations |
+| 14   | Ring bell                                                    | many                                | `Display::ringBell()`                           | Allows the elevator to ring a bell upon floor arrival        |
+| 15   | Illuminate floor buttons when pressed                        | Passenger uses elevator             | `ElevatorControlSystem::updateButtons()`        | Allows for the system to indicate the request has been put in |
+| 16   | Turn off Illuminated floor buttons when request is fulfilled | Passenger uses elevator             | `ElevatorControlSystem::updateButtons()`        | Allows for the system to clear fulfilled requests            |
