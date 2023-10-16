@@ -875,7 +875,7 @@ sequenceDiagram
 
 ## GUI
 
-![GUI](/Users/abdullah/Documents/Courses/COMP 3004 - OOD/assignments/a2/Elevator-Control-System/GUI.png)
+![GUI](GUI.png)
 
 
 
