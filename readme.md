@@ -1,3 +1,18 @@
+# COMP 3004 Assignment 2
+
+```
+Name: Abdullah Mostafa
+Student Number: 101008311
+Date: Oct 15, 2023
+```
+
+
+
+## Table of Contents
+
+[TOC]
+
+
 
 ## UML Class Diagram
 
@@ -70,8 +85,30 @@ classDiagram
 
 <hr>
 
+## Traceability Matrix
+
+| Id   | Requirement                                                  | Related Use Case                    | Fullfilled By                                   | Description                                                  |
+| ---- | ------------------------------------------------------------ | ----------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ |
+| 01   | Elevator responds to external floor buttons                  | Passenger uses elevator             | `ElevatorControlSystem::elevatorRequest()`      | Allows the elevator to respond to external floor buttons     |
+| 02   | Elevator responds to internal floor buttons                  | Passenger uses elevator             | `Elevator::addFloorRequest()`                   | Allows the elevator to respond to floor buttons in the elevator |
+| 03   | Elevator moves between floors                                | Passenger uses elevator             | `Elevator::fulfillRequest()`                    | This ensures the elevator car can move between one floor to another by handling the requests |
+| 04   | Elevator can open its doors                                  | Passenger uses elevator             | `Elevator::openDoors()`                         | Ensures elevator can open its doors                          |
+| 05   | Elevator can close its doors                                 | Passenger uses elevator             | `Elevator::closeDoors()`                        | Ensures elevator can close its doors                         |
+| 06   | Elevator goes to ground floor during fire alarm              | Fire alarm from building            | `ElevatorControlSystem::fireSafetySequence()`   | Allows for proper safety protocol during a fire alarm        |
+| 07   | Elevator goes to ground floor during power outage            | Power outage in the building        | `ElevatorControlSystem::outageSafetySequence()` | Allows for proper safety protocol during a fire outage       |
+| 08   | Help button triggers emergency response                      | Control system receives Help signal | `ElevatorControlSystem::helpSafetySequence()`   | Allows the system to respond to help calls                   |
+| 09   | Door obstacle prevents door from closing                     | Door obstacle detected              | `Elevator::pollObstructionSensor()`             | Ensures doors don't close when there is something obstructing the door from closing |
+| 10   | Overload limit in elevator                                   | Overload detected                   | `Elevator::underLimit()`                        | Ensures the elevator doesn't move when it surpasses the load limit |
+| 11   | Update display floor number                                  | Many                                | `Elevator::updateDisplay()`                     | Ensures the elevator's display shows the according floor number |
+| 12   | Show warnings on the display                                 | many                                | `Display::displayWarning()`                     | Ensures elevator's display shows the appropriate warning to the car passengers |
+| 13   | Play disembark message                                       | many                                | `Display::playDisembarkMessage()`               | Allows the elevator to ask passengers to disembark during emergency situations |
+| 14   | Ring bell                                                    | many                                | `Display::ringBell()`                           | Allows the elevator to ring a bell upon floor arrival        |
+| 15   | Illuminate floor buttons when pressed                        | Passenger uses elevator             | `ElevatorControlSystem::updateButtons()`        | Allows for the system to indicate the request has been put in |
+| 16   | Turn off Illuminated floor buttons when request is fulfilled | Passenger uses elevator             | `ElevatorControlSystem::updateButtons()`        | Allows for the system to clear fulfilled requests            |
 
 
+
+<hr>
 ## Design Patterns Used
 
 Throughout the design of the Elevator controller simulator's a couple  different design patterns were used to make the design more robust and organized.
@@ -80,13 +117,9 @@ The `ElevatorControlSystem` (ECS) is implemented as a Singleton Pattern, there i
 
 The way the elevators are controlled follows an Observer Pattern and a Command Pattern design. The ECS observes all the states of the different elevators, sensors, buttons etc and then commands each entity on the next instruction.
 
-
-
 <hr>
 
-
-
-### **Use Case for Elevator Control System**
+## Use Case for Elevator Control System
 
 **Use case: Using an Elevator**  
 
@@ -194,16 +227,15 @@ The way the elevators are controlled follows an Observer Pattern and a Command P
 11. Door close button is pressed
 
     ​	a. The doors attempt to close right away
-
-
-
-
+    
+    
 
 <hr>
+## Sequence Diagrams
 
+### Success Scenario 1 
 
-
-### **Success Scenario 1: ** Passenger requests elevator and rides it to floor *f* 
+**Passenger requests elevator and rides it to floor f**
 
 - Passenger calls the elevator from an arbitrary floor *f*, the ECS will find the nearest available elevator `findElevator()` and add floor *f* to that elevator's requests array `vector<Floor> requests`. The ECS will instruct the elevator to move through `pollRequests()`, continuously calling this method until the request is complete. Each time this method is called the elevator will move one floor. A request is completed when the elevator arrives at the floor of the request, at this point the doors will opens. Note that `pollRequests()` will return False until all requests are completed, `pollRequests()` triggers the elevator's `fulfillRequest()` method which causes the elevator to move towards the floors in `requests` array. 
 - When the elevator reaches the floor of which the button was pressed from, the passenger enters and the door closes after 10 seconds. At this point in time the elevator and ECS are idle until further action is done.
@@ -306,15 +338,11 @@ sequenceDiagram
 
 
 
-
-
 <hr>
 
+### Success Scenario 2
 
-
-
-
-### **Success Scenario 2: ** Passenger *A* on 1st floor requests elevator to floor 4, at the same time Passenger *B* on 2nd floor requests elevator to go to floor 3.
+**Passenger A on 1st floor requests elevator to floor 4, at the same time Passenger B on 2nd floor requests elevator to go to floor 3.**
 
 - Note: This scenario builds off *Success Scenario 1*, please read description for that one first to have better understanding of how the system functions. 
 - This scenario assumes both Passengers use the same elevator
@@ -509,13 +537,9 @@ sequenceDiagram
 	
 ```
 
-
-
 <hr>
 
-
-
-### **Safety Scenario: ** Fire
+### Safety Scenario: Fire
 
 - ECS invokes the Fire singal sequence. Both elevators are set into emergency mode with the fire signal flag.  This disables the elevators, updates the screen and plays a message telling passengers to disembark. The doors then close and make their way to the ground floor. This is done via the elevator's method `overrideGoToFloor(Floor::FLOOR_GROUND)` , overriding any requests in the `requests` array.
 - The ECS then resets the elevators back into an operational state when the fire signal is addressed
@@ -598,9 +622,7 @@ elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatu
 
 <hr>
 
-
-
-### **Safety Scenario: ** Help button is pressed
+### Safety Scenario: Help button is pressed
 
 - When A passenger presses the help button, an emergency procedure is initiated.  elevator flags the error with `flagEmergency(EmergencyStatus::HELP)`, this value gets added to the elevator's `emergencyStatus` (rather than set). The elevator's `alertECS()` method then alerts the ECS.
 - When the  `emergencyStatus` is changed and the value isn't zero, the `elevatorStatus` value is set to error mode and becomes inoperative until the problem has been addressed. `emergencyStatus` can only be cleared by the ECS when conditions are deemed safe.
@@ -662,9 +684,7 @@ sequenceDiagram
 
 <hr>
 
-
-
-### **Safety Scenario: ** Door Obstruction
+### Safety Scenario: Door Obstruction
 
 - Elevator will attempt to close the door, `closeDoor()` will check safety sensors such as the light curtain obstruction sensor, as well as the overload sensor. If any of these sensors are triggered `closeDoor()` fails and returns false, flagging an emergency and alerting the ECS. Elevator gets set to `ElevatorStatus::ERROR` and will remain non-operational. At this point the ECS will keep checking the obstruction sensor until the obstruction has been cleared. The ECS will clear the emergency flags the elevator is deemed safe (obstruction cleared) and the elevator will return back to an operating state.
 
@@ -718,9 +738,7 @@ sequenceDiagram
 
 <hr>
 
-
-
-### **Safety Scenario: ** Power Outage
+### Safety Scenario: Power Outage
 
 - ECS invokes the power outage sequence. Both elevators are set into emergency mode with the power outage flag.  This disables the elevators, updates the screen and plays a message telling passengers to disembark. The doors then close and make their way to the ground floor. This is done via the elevator's method `overrideGoToFloor(Floor::FLOOR_GROUND)` , overriding any requests in the `requests` array.
 - The ECS then resets the elevators back into an operational state when the power outage is addressed
@@ -800,13 +818,9 @@ elevator1#colon;Elevator()->>elevator1#colon;Elevator(): setStatus(ElevatorStatu
   	end
 ```
 
-
-
 <hr>
 
-
-
-### **Safety Scenario: ** Overload
+### Safety Scenario: Overload
 
 - Elevator will attempt to close the door, `closeDoor()` will check safety sensors such as the light curtain obstruction sensor, as well as the overload sensor. If any of these sensors are triggered `closeDoor()` fails and returns false, flagging an emergency and alerting the ECS. Elevator gets set to `ElevatorStatus::ERROR` and will remain non-operational. At this point the ECS will keep checking the obstruction sensor until the overload isn't present. The ECS will clear the emergency flags the elevator is deemed safe (no overload) and the elevator will return back to an operating state.
 
@@ -861,9 +875,7 @@ sequenceDiagram
 
 ## GUI
 
-
-
-![GUI](/Users/abdullah/Documents/Courses/COMP 3004 - OOD/assignments/a2/Elevator-Control-System/images/GUI.png)
+![GUI](/Users/abdullah/Documents/Courses/COMP 3004 - OOD/assignments/a2/Elevator-Control-System/GUI.png)
 
 
 
@@ -871,4 +883,16 @@ sequenceDiagram
 
 
 
+## State Diagrams
 
+### Elevator State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    
+
+    IDLE --> MOTION
+    MOTION --> IDLE
+    
+```

@@ -43,7 +43,7 @@ class Elevator {
         DoorStatus doorStatus;
         ElevatorStatus elevatorStatus;
         EmergencyStatus emergencyStatus;
-        std::vector<Floor> requests;
+        std::vector<Floor> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         Display* display;
 
         int load;
