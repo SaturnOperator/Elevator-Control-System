@@ -1,6 +1,7 @@
 ### **Safety Scenario: ** Fire
 
-- Passenger
+- ECS invokes the Fire singal sequence. Both elevators are set into emergency mode with the fire signal flag.  This disables the elevators, updates the screen and plays a message telling passengers to disembark. The doors then close and make their way to the ground floor. This is done via the elevator's method `overrideGoToFloor(Floor::FLOOR_GROUND)` , overriding any requests in the `requests` array.
+- The ECS then resets the elevators back into an operational state when the fire signal is addressed
 
 ```mermaid
 sequenceDiagram

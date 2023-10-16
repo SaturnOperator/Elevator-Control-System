@@ -1,6 +1,7 @@
 ### **Safety Scenario: ** Power Outage
 
-- Passenger
+- ECS invokes the power outage sequence. Both elevators are set into emergency mode with the power outage flag.  This disables the elevators, updates the screen and plays a message telling passengers to disembark. The doors then close and make their way to the ground floor. This is done via the elevator's method `overrideGoToFloor(Floor::FLOOR_GROUND)` , overriding any requests in the `requests` array.
+- The ECS then resets the elevators back into an operational state when the power outage is addressed
 
 ```mermaid
 sequenceDiagram
