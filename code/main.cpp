@@ -1,7 +1,8 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QVBoxLayout>
-#include "qelevatorpanel.h"
+
+#include "QElevatorPanel.h"
 
 int main(int argc, char *argv[])
 {

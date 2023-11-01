@@ -1,7 +1,6 @@
-#include "qelevatorpanel.h"
+#include "QElevatorPanel.h"
 
-QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent)
-{
+QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
     QVBoxLayout *layout = new QVBoxLayout;
     
     titleLabel = new QLabel("Elevator Panel", this);
@@ -17,7 +16,10 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent)
     screen->setSegmentStyle(QLCDNumber::Flat);
     screen->setFixedSize(75, 50);
     screen->setDigitCount(3);
-    screen->display(349);
+
+    // Create an up down direction indicator
+    upDownIndicator = new QUpDownIndicator();
+    displayLayout->addWidget(upDownIndicator);
 
     /* FLOOR BUTTONS */
 
@@ -65,7 +67,8 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent)
     
         // Connect floorButton's clicked() signal to update screen
         connect(floorButton, &QPushButton::clicked, this, [this, floor]() {
-            screen->display(floor);
+            // @@@@ Change this function to add to elevator queue
+            updateFloor(floor);
         });
     }
 
@@ -74,4 +77,27 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent)
     layout->addWidget(buttonGroup1);
     layout->addWidget(buttonGroup2);
     setLayout(layout);
+
+    // Initialize at first floor
+    floor = 1;
+    updateFloor(1);
+}
+
+bool QElevatorPanel::updateFloor(int floor){
+    // Update direction indicator
+    if(this->floor < floor){
+        upDownIndicator->up();
+    } else if(this->floor > floor){
+        upDownIndicator->down();
+    } else {
+        upDownIndicator->clear();
+    }
+
+    // Set floor
+    this->floor = floor;
+
+    // Update display
+    screen->display(floor);
+
+    return true;
 }
