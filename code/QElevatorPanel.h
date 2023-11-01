@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include "defs.h"
+
 class QElevatorPanel : public QWidget
 {
     Q_OBJECT
@@ -14,8 +16,11 @@ public:
 
 private:
     QLabel *titleLabel;
-    QPushButton *button1;
-    QPushButton *button2;
+    QPushButton *buttons[NUM_FLOORS]; // floor buttons
+    QPushButton *buttonDoorOpen;
+    QPushButton *buttonDoorClose;
+    QPushButton *buttonHelp;
+    QPushButton *buttonFire;
 };
 
 #endif // QELEVATORPANEL_H

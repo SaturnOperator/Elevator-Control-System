@@ -12,7 +12,7 @@ run: qt
 
 clean:
 	rm -rf build/*
-	rmdir build
+	rm -rf build
 
 # defs:
 # 	g++ $(FLAGS) -c defs.h
