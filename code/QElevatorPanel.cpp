@@ -1,7 +1,4 @@
 #include "qelevatorpanel.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QFont>
 
 QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent)
 {
@@ -9,51 +6,72 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent)
     
     titleLabel = new QLabel("Elevator Panel", this);
     layout->addWidget(titleLabel);
-    
-    // Create an array of buttons
-    for (int i = 0; i < NUM_FLOORS; i++) {
-        buttons[i] = new QPushButton(QString::number(i + 1), this);
-        buttons[i]->setFixedWidth(26);
-    }
 
-    // Put main buttons horizontally in HBox
-    QHBoxLayout *mainButtonsLayout = new QHBoxLayout;
-    QWidget *mainButtons = new QWidget;
-    mainButtons->setLayout(mainButtonsLayout);
+    QHBoxLayout *displayLayout = new QHBoxLayout;
+    QWidget *displayGroup = new QWidget;
+    displayGroup->setLayout(displayLayout);
 
-    QFont iconsFont;
-    iconsFont.setFamily("Font Awesome 6 Free"); // Custom Icon Font
-    iconsFont.setPointSize(12); // 
+    // Create LCD screen to show floor number indicator
+    screen = new QLCDNumber(this);
+    displayLayout->addWidget(screen);
+    screen->setSegmentStyle(QLCDNumber::Flat);
+    screen->setFixedSize(75, 50);
+    screen->setDigitCount(3);
+    screen->display(349);
 
-    // Create main buttons, use custom glyphs for icons
+    /* FLOOR BUTTONS */
+
+    // Put floor buttons horizontally in HBox
+    QHBoxLayout *controlButtonsLayout = new QHBoxLayout;
+    QWidget *buttonGroup1 = new QWidget;
+    buttonGroup1->setLayout(controlButtonsLayout);
+
+    // Create control buttons, use custom glyphs for icons
     buttonDoorOpen = new QPushButton(" ", this);
     buttonDoorClose = new QPushButton(" ", this);
     buttonHelp = new QPushButton("", this);
     buttonFire = new QPushButton("", this);
-    buttonDoorOpen->setFont(iconsFont);
-    buttonDoorClose->setFont(iconsFont);
-    buttonHelp->setFont(iconsFont);
-    buttonFire->setFont(iconsFont);
 
-    // buttonFire->setObjectName("fire-button");
+    controlButtonsLayout->addWidget(buttonDoorOpen);
+    controlButtonsLayout->addWidget(buttonDoorClose);
+    controlButtonsLayout->addWidget(buttonHelp);
+    controlButtonsLayout->addWidget(buttonFire);
 
+    // Add all control buttons into controlButtons list
+    controlButtons << buttonDoorOpen << buttonDoorClose << buttonHelp << buttonFire;
 
-    mainButtonsLayout->addWidget(buttonDoorOpen);
-    mainButtonsLayout->addWidget(buttonDoorClose);
-    mainButtonsLayout->addWidget(buttonHelp);
-    mainButtonsLayout->addWidget(buttonFire);
-    layout->addWidget(mainButtons);
+    QFont iconsFont;
+    iconsFont.setFamily("Font Awesome 6 Free"); // Custom Icon Font
+    iconsFont.setPointSize(12);
+
+    // Stylize each button, add them each into the widget
+    for (QPushButton *button : controlButtons) {
+        button->setFont(iconsFont); // Apply font to each button
+        button->setFixedWidth(26);
+        controlButtonsLayout->addWidget(button);
+    }
 
     // Put floor buttons horizontally in HBox
     QHBoxLayout *floorButtonsLayout = new QHBoxLayout;
-    QWidget *floorButtons = new QWidget;
-    floorButtons->setLayout(floorButtonsLayout);
+    QWidget *buttonGroup2 = new QWidget;
+    buttonGroup2->setLayout(floorButtonsLayout);
 
-    // Add the buttons to the layout
-    for (int i = 0; i < NUM_FLOORS; i++) {
-        floorButtonsLayout->addWidget(buttons[i]);
+    // Create floor buttons, stylize them and add them to floorButton list
+    for (int floor = 1; floor <= NUM_FLOORS; ++floor) {
+        QPushButton *floorButton = new QPushButton(QString::number(floor), this);
+        floorButton->setFixedWidth(26);
+        floorButtonsLayout->addWidget(floorButton);
+        floorButtons << floorButton; // Add button to floorButtons array
+    
+        // Connect floorButton's clicked() signal to update screen
+        connect(floorButton, &QPushButton::clicked, this, [this, floor]() {
+            screen->display(floor);
+        });
     }
-    layout->addWidget(floorButtons);
 
+    // Add each buttonGroup into the main view
+    layout->addWidget(displayGroup);
+    layout->addWidget(buttonGroup1);
+    layout->addWidget(buttonGroup2);
     setLayout(layout);
 }

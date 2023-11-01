@@ -4,6 +4,11 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QFont>
+#include <QList>
+#include <QLCDNumber>
 
 #include "defs.h"
 
@@ -16,7 +21,9 @@ public:
 
 private:
     QLabel *titleLabel;
-    QPushButton *buttons[NUM_FLOORS]; // floor buttons
+    QLCDNumber *screen; // Floor number indicator
+    QList<QPushButton*> floorButtons; // Floor buttons
+    QList<QPushButton*> controlButtons; // Control Buttons
     QPushButton *buttonDoorOpen;
     QPushButton *buttonDoorClose;
     QPushButton *buttonHelp;
