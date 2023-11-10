@@ -2,7 +2,7 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 
-#include "QElevatorPanel.h"
+#include "Elevator.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,12 +12,17 @@ int main(int argc, char *argv[])
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
 
+
     // Dynamically create and add each elevator
-    QElevatorPanel elevatorPanels[NUM_ELEVATORS];
-    for (int i = 0; i < NUM_ELEVATORS; i++) {
-        elevatorPanels[i].setWindowTitle("Elevator Panel " + QString::number(i + 1));
-        elevatorPanels[i].setParent(&mainWindow);
-        mainLayout->addWidget(&elevatorPanels[i]);
+    QList<Elevator*> elevators;
+    // for (int i = 0; i < NUM_ELEVATORS; i++) {
+    for (int i = 0; i < 1; i++) {
+        Elevator* e = new Elevator();
+        elevators << e;
+
+        // Add the elevator's panel into the GUI
+        mainLayout->addWidget(e->getModel());
+        mainLayout->addWidget(e->getPanel());
     }
 
     // Create and show central widget

@@ -1,28 +1,28 @@
-#ifndef QUPDONWINDICATOR_H
-#define QUPDONWINDICATOR_H
+#ifndef QUPDOWNINDICATOR_H
+#define QUPDOWNINDICATOR_H
+
+#include "defs.h"
 
 #include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QFont>
 #include <QList>
 
-#include "defs.h"
+#include "QCustomIconsFont.h"
 
-class QUpDownIndicator : public QWidget
-{
+class QUpDownIndicator : public QWidget {
     Q_OBJECT
 
-public:
-    explicit QUpDownIndicator(QWidget *parent = nullptr);
-    void up();
-    void down();
-    void clear();
+    public:
+        explicit QUpDownIndicator(QWidget *parent = nullptr);
+        void up();
+        void down();
+        void clear();
 
-private:
-    QLabel *upIndicator;
-    QLabel *downIndicator;
-    QList<QLabel*> indicators;
+    private:
+        QLabel *upIndicator;
+        QLabel *downIndicator;
+        QList<QLabel*> indicators;
 };
 
-#endif // QUPDONWINDICATOR_H
+#endif // QUPDOWNINDICATOR_H

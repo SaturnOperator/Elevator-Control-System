@@ -9,8 +9,7 @@ QUpDownIndicator::QUpDownIndicator(QWidget *parent) : QWidget(parent) {
     indicators << upIndicator << downIndicator;
 
     // Use custom fonts icons
-    QFont iconsFont;
-    iconsFont.setFamily("Font Awesome 6 Free"); // Custom Icon Font
+    QCustomIconsFont& iconsFont = QCustomIconsFont::instance();
     iconsFont.setPointSize(20);
 
     // Stylize each and add to view

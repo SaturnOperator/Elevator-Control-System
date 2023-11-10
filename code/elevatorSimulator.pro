@@ -1,6 +1,12 @@
 TEMPLATE = app
 TARGET = elevatorSimulator
 QT += widgets
+
 FONT_PATH = assets/fonts
-SOURCES += main.cpp qelevatorpanel.cpp QUpDownIndicator.cpp
-HEADERS += qelevatorpanel.h QUpDownIndicator.h defs.h
+HEADERS += QCustomIconsFont.h
+
+SOURCES += main.cpp Elevator.cpp
+HEADERS +=  defs.h Elevator.h
+
+SOURCES += QElevatorPanel.cpp QUpDownIndicator.cpp QErrorIndicator.cpp QElevatorModel.cpp
+HEADERS += QElevatorPanel.h QUpDownIndicator.h QErrorIndicator.h QElevatorModel.h

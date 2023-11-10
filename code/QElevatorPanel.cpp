@@ -1,11 +1,16 @@
 #include "QElevatorPanel.h"
 
-QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
+QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *layout = new QVBoxLayout;
     
     titleLabel = new QLabel("Elevator Panel", this);
     layout->addWidget(titleLabel);
 
+    // Custom Icons font for buttons and indicators
+    QCustomIconsFont& iconsFont = QCustomIconsFont::instance();
+
+    /* FLOOR & DIRECTION INDICATORS */
+    
     QHBoxLayout *displayLayout = new QHBoxLayout;
     QWidget *displayGroup = new QWidget;
     displayGroup->setLayout(displayLayout);
@@ -21,7 +26,27 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
     upDownIndicator = new QUpDownIndicator();
     displayLayout->addWidget(upDownIndicator);
 
-    /* FLOOR BUTTONS */
+
+    /* ERROR INDICATOR */
+    errors = new QErrorIndicator();
+
+    /* CONTROL BUTTONS */
+
+    QString buttonStyleSheet = "QPushButton { "
+    "    color: white; "
+    "    background-color: #111111; "
+    "    border-radius: 13px; "
+    "}"
+    "QPushButton:hover { "
+    "    background-color: #202020; "
+    "}"
+    "QPushButton:pressed { "
+    "    background-color: #093eb8; "
+    "}"
+    "QPushButton:disabled { "
+    "    background-color: #093eb8; "
+    "    border: 2px solid #255fe6"
+    "}";
 
     // Put floor buttons horizontally in HBox
     QHBoxLayout *controlButtonsLayout = new QHBoxLayout;
@@ -32,7 +57,7 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
     buttonDoorOpen = new QPushButton(" ", this);
     buttonDoorClose = new QPushButton(" ", this);
     buttonHelp = new QPushButton("", this);
-    buttonFire = new QPushButton("", this);
+    buttonFire = new QPushButton("", this);
 
     controlButtonsLayout->addWidget(buttonDoorOpen);
     controlButtonsLayout->addWidget(buttonDoorClose);
@@ -41,17 +66,17 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
 
     // Add all control buttons into controlButtons list
     controlButtons << buttonDoorOpen << buttonDoorClose << buttonHelp << buttonFire;
-
-    QFont iconsFont;
-    iconsFont.setFamily("Font Awesome 6 Free"); // Custom Icon Font
     iconsFont.setPointSize(12);
 
     // Stylize each button, add them each into the widget
     for (QPushButton *button : controlButtons) {
         button->setFont(iconsFont); // Apply font to each button
-        button->setFixedWidth(26);
+        button->setFixedSize(26, 26);
+        button->setStyleSheet(buttonStyleSheet);
         controlButtonsLayout->addWidget(button);
     }
+
+    /* FLOOR BUTTONS */
 
     // Put floor buttons horizontally in HBox
     QHBoxLayout *floorButtonsLayout = new QHBoxLayout;
@@ -61,9 +86,11 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
     // Create floor buttons, stylize them and add them to floorButton list
     for (int floor = 1; floor <= NUM_FLOORS; ++floor) {
         QPushButton *floorButton = new QPushButton(QString::number(floor), this);
-        floorButton->setFixedWidth(26);
+        floorButton->setFixedSize(26, 26);
         floorButtonsLayout->addWidget(floorButton);
         floorButtons << floorButton; // Add button to floorButtons array
+        floorButton->setObjectName("floorButton");
+        floorButton->setStyleSheet(buttonStyleSheet);
     
         // Connect floorButton's clicked() signal to update screen
         connect(floorButton, &QPushButton::clicked, this, [this, floor]() {
@@ -72,8 +99,11 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
         });
     }
 
+    floorButtons[2]->setEnabled(false);
+
     // Add each buttonGroup into the main view
     layout->addWidget(displayGroup);
+    layout->addWidget(errors);
     layout->addWidget(buttonGroup1);
     layout->addWidget(buttonGroup2);
     setLayout(layout);
@@ -81,6 +111,11 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent){
     // Initialize at first floor
     floor = 1;
     updateFloor(1);
+    errors->clear();
+    // addError(EmergencyStatus::FIRE);
+    // addError(EmergencyStatus::OVERLOAD);
+    // addError(EmergencyStatus::OBSTRUCTION);
+    // clearError(EmergencyStatus::OVERLOAD);
 }
 
 bool QElevatorPanel::updateFloor(int floor){
@@ -101,3 +136,16 @@ bool QElevatorPanel::updateFloor(int floor){
 
     return true;
 }
+
+void QElevatorPanel::addError(EmergencyStatus e){
+    errors->addError(e);
+}
+
+void QElevatorPanel::clearError(EmergencyStatus e){
+    errors->clearError(e);
+}
+
+void QElevatorPanel::clear(){
+    errors->clear();
+}
+

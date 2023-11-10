@@ -4,6 +4,8 @@
 #define NUM_ELEVATORS  2
 #define NUM_FLOORS 4
 
+#define MAX_LOAD 5000
+
 enum class Direction {
     NONE  = 0x0,
     DOWN  = 0x1,
@@ -23,11 +25,11 @@ enum class ElevatorStatus {
 // Bit flags as elevator can have multiple concurrent errors  
 enum class EmergencyStatus {
     NONE         = 0x0,
-    HELP         = 0x1,
-    OBSTRUCTION  = 0x2,
-    OVERLOAD     = 0x4,
-    FIRE         = 0x8,
-    OUTAGE       = 0x10
+    OBSTRUCTION  = 0x1,
+    OVERLOAD     = 0x2,
+    HELP         = 0x4,
+    OUTAGE       = 0x8,
+    FIRE         = 0x10,
 };
 
 enum class Floor {

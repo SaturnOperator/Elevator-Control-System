@@ -8,32 +8,36 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QFont>
 #include <QList>
 #include <QLCDNumber>
 
 #include "QUpDownIndicator.h"
+#include "QErrorIndicator.h"
+#include "QCustomIconsFont.h"
 
-class QElevatorPanel : public QWidget
-{
+class QElevatorPanel : public QWidget {
     Q_OBJECT
 
-public:
-    explicit QElevatorPanel(QWidget *parent = nullptr);
+    public:
+        explicit QElevatorPanel(QWidget *parent = nullptr);
+        void addError(EmergencyStatus e);
+        void clearError(EmergencyStatus e);
+        void clear();
 
-private:
-    int floor;
-    QLabel *titleLabel;
-    QLCDNumber *screen; // Floor number indicator
-    QUpDownIndicator *upDownIndicator;
-    QList<QPushButton*> floorButtons; // Floor buttons
-    QList<QPushButton*> controlButtons; // Control Buttons
-    QPushButton *buttonDoorOpen;
-    QPushButton *buttonDoorClose;
-    QPushButton *buttonHelp;
-    QPushButton *buttonFire;
+    private:
+        int floor;
+        QLabel *titleLabel;
+        QErrorIndicator *errors;
+        QLCDNumber *screen; // Floor number indicator
+        QUpDownIndicator *upDownIndicator;
+        QList<QPushButton*> floorButtons; // Floor buttons
+        QList<QPushButton*> controlButtons; // Control Buttons
+        QPushButton *buttonDoorOpen;
+        QPushButton *buttonDoorClose;
+        QPushButton *buttonHelp;
+        QPushButton *buttonFire;
 
-    bool updateFloor(int floor);
+        bool updateFloor(int floor);
 };
 
 #endif // QELEVATORPANEL_H
