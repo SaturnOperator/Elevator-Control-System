@@ -9,6 +9,7 @@
 
 
 #include "defs.h"
+#include "QCustomIconsFont.h"
 
 class QElevatorModel : public QWidget {
     Q_OBJECT
@@ -20,6 +21,7 @@ class QElevatorModel : public QWidget {
         void moveUp();
         void moveDown();
         void setFloorIndicator(int floor, bool enable);
+        void clearIndicators();
 
     private:
         QScrollBar* car;

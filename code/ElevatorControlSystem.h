@@ -13,7 +13,7 @@ class ElevatorControlSystem : public QObject {
         bool requestFloor(Floor f, Direction dir);
 
         // System Actions
-        Elevator* findElevator() const;
+        Elevator* findBestElevator(int floor = 1);
         void elevatorRequest(Elevator* e, Floor f);
         void updateButtons();
 
@@ -30,9 +30,11 @@ class ElevatorControlSystem : public QObject {
         Elevator* getElevator(int i);
         int getNumElevators();
         int getNumFloors();
+        QElevatorButton* getFloorButton(int floor, Direction dir);
 
     private:
         QList<Elevator*> elevators;
+        QMap<int, QMap<Direction, QElevatorButton*>> floorButtons;
         int numFloors;
 };
 

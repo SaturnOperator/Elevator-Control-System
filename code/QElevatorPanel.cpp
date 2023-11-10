@@ -1,13 +1,12 @@
 #include "QElevatorPanel.h"
+#include "Elevator.h" // Forward declaration
 
-QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
+QElevatorPanel::QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
+    : QWidget(parent), elevator(elevator) {
     QVBoxLayout* layout = new QVBoxLayout;
     
     titleLabel = new QLabel("Elevator Panel", this);
     layout->addWidget(titleLabel);
-
-    // Custom Icons font for buttons and indicators
-    QCustomIconsFont& iconsFont = QCustomIconsFont::instance();
 
     /* FLOOR & DIRECTION INDICATORS */
     
@@ -32,32 +31,16 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
 
     /* CONTROL BUTTONS */
 
-    QString buttonStyleSheet = "QPushButton { "
-    "    color: white; "
-    "    background-color: #111111; "
-    "    border-radius: 13px; "
-    "}"
-    "QPushButton:hover { "
-    "    background-color: #202020; "
-    "}"
-    "QPushButton:pressed { "
-    "    background-color: #093eb8; "
-    "}"
-    "QPushButton:disabled { "
-    "    background-color: #093eb8; "
-    "    border: 2px solid #255fe6"
-    "}";
-
     // Put floor buttons horizontally in HBox
     QHBoxLayout* controlButtonsLayout = new QHBoxLayout;
     QWidget* buttonGroup1 = new QWidget;
     buttonGroup1->setLayout(controlButtonsLayout);
 
     // Create control buttons, use custom glyphs for icons
-    buttonDoorOpen = new QPushButton(" ", this);
-    buttonDoorClose = new QPushButton(" ", this);
-    buttonHelp = new QPushButton("", this);
-    buttonFire = new QPushButton("", this);
+    buttonDoorOpen = new QElevatorButton(" ", this);
+    buttonDoorClose = new QElevatorButton(" ", this);
+    buttonHelp = new QElevatorButton("", this);
+    buttonFire = new QElevatorButton("", this);
 
     controlButtonsLayout->addWidget(buttonDoorOpen);
     controlButtonsLayout->addWidget(buttonDoorClose);
@@ -66,13 +49,9 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
 
     // Add all control buttons into controlButtons list
     controlButtons << buttonDoorOpen << buttonDoorClose << buttonHelp << buttonFire;
-    iconsFont.setPointSize(12);
-
+    
     // Stylize each button, add them each into the widget
-    for (QPushButton* button : controlButtons) {
-        button->setFont(iconsFont); // Apply font to each button
-        button->setFixedSize(26, 26);
-        button->setStyleSheet(buttonStyleSheet);
+    for (QElevatorButton* button : controlButtons) {
         controlButtonsLayout->addWidget(button);
     }
 
@@ -85,21 +64,17 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
 
     // Create floor buttons, stylize them and add them to floorButton list
     for (int floor = 1; floor <= NUM_FLOORS; ++floor) {
-        QPushButton* floorButton = new QPushButton(QString::number(floor), this);
-        floorButton->setFixedSize(26, 26);
+        QElevatorButton* floorButton = new QElevatorButton(QString::number(floor), this);
         floorButtonsLayout->addWidget(floorButton);
         floorButtons << floorButton; // Add button to floorButtons array
-        floorButton->setObjectName("floorButton");
-        floorButton->setStyleSheet(buttonStyleSheet);
     
         // Connect floorButton's clicked() signal to update screen
-        connect(floorButton, &QPushButton::clicked, this, [this, floor]() {
+        connect(floorButton, &QPushButton::clicked, this, [floorButton, elevator, floor]() {
             // @@@@ Change this function to add to elevator queue
-            updateFloor(floor);
+            elevator->requestFloor(floor);
+            floorButton->on();
         });
     }
-
-    floorButtons[2]->setEnabled(false);
 
     // Add each buttonGroup into the main view
     layout->addWidget(displayGroup);

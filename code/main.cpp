@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QMainWindow>
-#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QSpacerItem>
 
 #include "ElevatorControlSystem.h"
 
@@ -9,18 +10,49 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QMainWindow mainWindow;
     mainWindow.setWindowTitle("Elevator Panels");
-    QVBoxLayout* mainLayout = new QVBoxLayout;
+    QGridLayout* mainLayout = new QGridLayout;
 
 
     ElevatorControlSystem *ecs = new ElevatorControlSystem(NUM_FLOORS, NUM_ELEVATORS);
     
+    int colFloorButton = 0;
+    int rowFloorButton = 1;
+    // QSpacerItem* buttonSpacer = new QSpacerItem(26, 26, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    for (int i = 1; i <= ecs->getNumFloors(); i++) {
+        // Add label for each floor
+        QLabel* floorLabel = new QLabel("   " + QString::number(i));
+        floorLabel->setStyleSheet(
+            "QLabel { "
+            "   font-size: 9px;"
+            // "    background-color: grey;"
+            // "   border: 1px solid gray; "
+            // "   padding: 5px; "
+            "}"
+        );
+        mainLayout->addWidget(floorLabel, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton, 2, 1); //1+ecs->getNumElevators());        
+        // Get floor buttons
+        QElevatorButton* upButton = ecs->getFloorButton(i, Direction::UP);
+        QElevatorButton* downButton = ecs->getFloorButton(i, Direction::DOWN);
+        
+        // Up button doesn't exist at topmost floor, put spacer instead
+        mainLayout->addWidget(upButton, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);
+        mainLayout->addWidget(downButton, 2 * (ecs->getNumFloors() - i)+1 + rowFloorButton, colFloorButton);
+    }
 
-    
+
+
+    // Add elevator buttons and elevator models into the view
+    int colElevatorModels = colFloorButton+1;
+    int rowElevatorModels = rowFloorButton;
     for (int i = 0; i < ecs->getNumElevators(); i++) {
+        // Add elevator label
+        mainLayout->addWidget(new QLabel("Elevator " + QString::number(i)), rowElevatorModels-1, i+colElevatorModels, 1, 1);
+        
         // Add the elevator's panel into the GUI
         Elevator* e = ecs->getElevator(i);
-        mainLayout->addWidget(e->getModel());
-        mainLayout->addWidget(e->getPanel());
+        mainLayout->addWidget(e->getModel(), rowElevatorModels, i+colElevatorModels, ecs->getNumFloors()*2, 1);
+        mainLayout->addWidget(e->getPanel(), rowElevatorModels+ecs->getNumFloors()*2+1, i+colElevatorModels);
+
     }
 
     // Create and show central widget

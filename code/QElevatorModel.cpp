@@ -3,27 +3,34 @@
 
 QElevatorModel::QElevatorModel(QWidget *parent) : QWidget(parent) {
     QGridLayout* layout = new QGridLayout;
-    this->setStyleSheet(
-        "QLabel { "
-        "   padding: 5px; "
-        // "   border: 1px solid gray; "
-        "}"
-    );
+
+    // layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    // this->setStyleSheet(
+    //     "QLabel { "
+    //     "   padding: 5px; "
+    //     // "   border: 1px solid gray; "
+    //     "}"
+    // );
 
     car = new QScrollBar(Qt::Vertical);
     layout->addWidget(car, 0, 0, NUM_FLOORS*2, 1);
     
-    car->setMinimumHeight(40*NUM_FLOORS);
+    car->setMinimumHeight(100*NUM_FLOORS);
 
     car->setMinimum(1);
     car->setMaximum(NUM_FLOORS);
     car->setPageStep(1);
-    car->setEnabled(false);
+    // car->setEnabled(false);
 
     car->setValue(car->maximum()); // Move to bottom
+    
+    QCustomIconsFont& iconsFont = QCustomIconsFont::instance();
 
     for (int i = 0; i < NUM_FLOORS; ++i){
-        QLabel* floorLabel = new QLabel("•");
+        QLabel* floorLabel = new QLabel("");
+        floorLabel->setFont(iconsFont);
         floorLabel->setEnabled(false);
         floorLabel->setStyleSheet(
            "QLabel:enabled { color: #255fe6; }"
@@ -63,6 +70,12 @@ void QElevatorModel::moveDown(){
 
 void QElevatorModel::setFloorIndicator(int floor, bool enable){
     if(floor >= 0 && floor <= NUM_FLOORS){
-        indicators[floor]->setEnabled(enable);
+        indicators.at(NUM_FLOORS-floor)->setEnabled(enable);
+    }
+}
+
+void QElevatorModel::clearIndicators(){
+    for (QLabel* label : indicators) {
+        label->setEnabled(false);
     }
 }

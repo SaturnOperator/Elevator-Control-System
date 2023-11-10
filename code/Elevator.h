@@ -1,7 +1,8 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
-#include <QList>
+#include <QMap>
+#include <QDebug>
 
 #include "Display.h"
 #include "QElevatorPanel.h"
@@ -16,7 +17,7 @@ class Elevator : public QObject {
         // User Actions
         bool closeDoors(); // Triggered by button or automatically, attempts to close door returns false and triggers obstruction if fails
         bool openDoors(); // Triggered by button or automatically
-        bool requestFloor(int floor); // Floor f button pressed
+        bool requestFloor(int floor, Direction dir = Direction::NONE); // Floor f button pressed
         void helpButton(); // Help button pressed
 
         // System Actions
@@ -35,8 +36,8 @@ class Elevator : public QObject {
         DoorStatus getDoorStatus() const;
         ElevatorStatus getStatus() const;
         EmergencyStatus getEmergencyStatus() const;
-        QElevatorPanel* getPanel();
-        QElevatorModel* getModel();
+        QElevatorPanel* getPanel() const;
+        QElevatorModel* getModel() const;
 
         // Other
         bool underLimit(); // Checks if load is under the limit
@@ -48,7 +49,7 @@ class Elevator : public QObject {
         DoorStatus doorStatus;
         ElevatorStatus elevatorStatus;
         EmergencyStatus emergencyStatus;
-        QList<int> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
+        QMap<int, Direction> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         QElevatorPanel* panel;
         QElevatorModel* model;
 
