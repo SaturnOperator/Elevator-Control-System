@@ -7,7 +7,9 @@
 #include "QElevatorPanel.h"
 #include "QElevatorModel.h"
 
-class Elevator {
+class Elevator : public QObject {
+    Q_OBJECT
+
     public:
         Elevator();
 

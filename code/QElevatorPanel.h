@@ -26,16 +26,16 @@ class QElevatorPanel : public QWidget {
 
     private:
         int floor;
-        QLabel *titleLabel;
-        QErrorIndicator *errors;
-        QLCDNumber *screen; // Floor number indicator
-        QUpDownIndicator *upDownIndicator;
+        QLabel* titleLabel;
+        QErrorIndicator* errors;
+        QLCDNumber* screen; // Floor number indicator
+        QUpDownIndicator* upDownIndicator;
         QList<QPushButton*> floorButtons; // Floor buttons
         QList<QPushButton*> controlButtons; // Control Buttons
-        QPushButton *buttonDoorOpen;
-        QPushButton *buttonDoorClose;
-        QPushButton *buttonHelp;
-        QPushButton *buttonFire;
+        QPushButton* buttonDoorOpen;
+        QPushButton* buttonDoorClose;
+        QPushButton* buttonHelp;
+        QPushButton* buttonFire;
 
         bool updateFloor(int floor);
 };

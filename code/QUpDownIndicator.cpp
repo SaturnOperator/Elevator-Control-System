@@ -1,7 +1,7 @@
 #include "QUpDownIndicator.h"
 
 QUpDownIndicator::QUpDownIndicator(QWidget *parent) : QWidget(parent) {
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
     
     // Create indicators
     upIndicator = new QLabel("", this);
@@ -13,7 +13,7 @@ QUpDownIndicator::QUpDownIndicator(QWidget *parent) : QWidget(parent) {
     iconsFont.setPointSize(20);
 
     // Stylize each and add to view
-    for (QLabel *i : indicators) {
+    for (QLabel* i : indicators) {
         i->setFont(iconsFont); // Apply font to each button
         i->setEnabled(false); // Disable indicators by default
         layout->addWidget(i);

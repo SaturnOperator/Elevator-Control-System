@@ -1,7 +1,7 @@
 #include "QElevatorPanel.h"
 
 QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
     
     titleLabel = new QLabel("Elevator Panel", this);
     layout->addWidget(titleLabel);
@@ -11,8 +11,8 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
 
     /* FLOOR & DIRECTION INDICATORS */
     
-    QHBoxLayout *displayLayout = new QHBoxLayout;
-    QWidget *displayGroup = new QWidget;
+    QHBoxLayout* displayLayout = new QHBoxLayout;
+    QWidget* displayGroup = new QWidget;
     displayGroup->setLayout(displayLayout);
 
     // Create LCD screen to show floor number indicator
@@ -49,8 +49,8 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
     "}";
 
     // Put floor buttons horizontally in HBox
-    QHBoxLayout *controlButtonsLayout = new QHBoxLayout;
-    QWidget *buttonGroup1 = new QWidget;
+    QHBoxLayout* controlButtonsLayout = new QHBoxLayout;
+    QWidget* buttonGroup1 = new QWidget;
     buttonGroup1->setLayout(controlButtonsLayout);
 
     // Create control buttons, use custom glyphs for icons
@@ -69,7 +69,7 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
     iconsFont.setPointSize(12);
 
     // Stylize each button, add them each into the widget
-    for (QPushButton *button : controlButtons) {
+    for (QPushButton* button : controlButtons) {
         button->setFont(iconsFont); // Apply font to each button
         button->setFixedSize(26, 26);
         button->setStyleSheet(buttonStyleSheet);
@@ -79,13 +79,13 @@ QElevatorPanel::QElevatorPanel(QWidget *parent) : QWidget(parent) {
     /* FLOOR BUTTONS */
 
     // Put floor buttons horizontally in HBox
-    QHBoxLayout *floorButtonsLayout = new QHBoxLayout;
-    QWidget *buttonGroup2 = new QWidget;
+    QHBoxLayout* floorButtonsLayout = new QHBoxLayout;
+    QWidget* buttonGroup2 = new QWidget;
     buttonGroup2->setLayout(floorButtonsLayout);
 
     // Create floor buttons, stylize them and add them to floorButton list
     for (int floor = 1; floor <= NUM_FLOORS; ++floor) {
-        QPushButton *floorButton = new QPushButton(QString::number(floor), this);
+        QPushButton* floorButton = new QPushButton(QString::number(floor), this);
         floorButton->setFixedSize(26, 26);
         floorButtonsLayout->addWidget(floorButton);
         floorButtons << floorButton; // Add button to floorButtons array

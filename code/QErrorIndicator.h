@@ -23,12 +23,12 @@ class QErrorIndicator : public QWidget {
 
     private:
         int value;
-        QLabel *errorMessage;
-        QLabel *obstacleIcon;
-        QLabel *overloadIcon;
-        QLabel *helpIcon;
-        QLabel *outageIcon;
-        QLabel *fireIcon;
+        QLabel* errorMessage;
+        QLabel* obstacleIcon;
+        QLabel* overloadIcon;
+        QLabel* helpIcon;
+        QLabel* outageIcon;
+        QLabel* fireIcon;
         QList<QLabel*> errorIcons;
 
         void updateScreen();

@@ -19,12 +19,11 @@ class QElevatorModel : public QWidget {
         void moveCar(int position);
         void moveUp();
         void moveDown();
-
-
+        void setFloorIndicator(int floor, bool enable);
 
     private:
-        QScrollBar *car;
-         QList<QLabel*> indicator; // Displays if elevator is coming or not
+        QScrollBar* car;
+         QList<QLabel*> indicators; // Displays if elevator is coming or not
 
         void updateScreen();
 };

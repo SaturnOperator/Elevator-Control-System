@@ -2,31 +2,29 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 
-#include "Elevator.h"
+#include "ElevatorControlSystem.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QMainWindow mainWindow;
     mainWindow.setWindowTitle("Elevator Panels");
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QVBoxLayout* mainLayout = new QVBoxLayout;
 
 
+    ElevatorControlSystem *ecs = new ElevatorControlSystem(NUM_FLOORS, NUM_ELEVATORS);
+    
 
-    // Dynamically create and add each elevator
-    QList<Elevator*> elevators;
-    // for (int i = 0; i < NUM_ELEVATORS; i++) {
-    for (int i = 0; i < 1; i++) {
-        Elevator* e = new Elevator();
-        elevators << e;
-
+    
+    for (int i = 0; i < ecs->getNumElevators(); i++) {
         // Add the elevator's panel into the GUI
+        Elevator* e = ecs->getElevator(i);
         mainLayout->addWidget(e->getModel());
         mainLayout->addWidget(e->getPanel());
     }
 
     // Create and show central widget
-    QWidget *centralWidget = new QWidget;
+    QWidget* centralWidget = new QWidget;
     centralWidget->setLayout(mainLayout);
     mainWindow.setCentralWidget(centralWidget);
     mainWindow.show();

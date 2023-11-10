@@ -20,8 +20,8 @@ class QUpDownIndicator : public QWidget {
         void clear();
 
     private:
-        QLabel *upIndicator;
-        QLabel *downIndicator;
+        QLabel* upIndicator;
+        QLabel* downIndicator;
         QList<QLabel*> indicators;
 };
 

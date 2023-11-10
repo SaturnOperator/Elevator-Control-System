@@ -1,7 +1,7 @@
 #include "QErrorIndicator.h"
 
 QErrorIndicator::QErrorIndicator(QWidget *parent) : QWidget(parent) {
-    QHBoxLayout *layout = new QHBoxLayout;
+    QHBoxLayout* layout = new QHBoxLayout;
 
     // Use custom fonts icons
     QCustomIconsFont& iconsFont = QCustomIconsFont::instance();
@@ -18,7 +18,7 @@ QErrorIndicator::QErrorIndicator(QWidget *parent) : QWidget(parent) {
     errorIcons << obstacleIcon << overloadIcon << helpIcon << outageIcon << fireIcon;
 
     // Stylize each and add to view
-    for (QLabel *i : errorIcons) {
+    for (QLabel* i : errorIcons) {
         layout->addWidget(i);
         i->setFont(iconsFont); // Apply font to each button
         i->setEnabled(false); // Disable indicators by default

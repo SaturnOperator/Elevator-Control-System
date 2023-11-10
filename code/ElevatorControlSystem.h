@@ -3,9 +3,11 @@
 
 #include "Elevator.h"
 
-class ElevatorControlSystem {
+class ElevatorControlSystem : public QObject {
+    Q_OBJECT
+
     public:
-        ElevatorControlSystem();
+        ElevatorControlSystem(int numFloors, int numElevators);
         
         // User Actions
         bool requestFloor(Floor f, Direction dir);
@@ -20,13 +22,18 @@ class ElevatorControlSystem {
         bool helpReceiveResponse(Elevator* e);
         bool helpCallBuilding();
         void helpCall911();
-        void addressEmergency(Elevator* e, EmergencyStatus e);
+        void addressEmergency(Elevator* e, EmergencyStatus status);
 
         void fireSafetySequence();
         void outageSafetySequence();
 
+        Elevator* getElevator(int i);
+        int getNumElevators();
+        int getNumFloors();
+
     private:
-        std::vector<Elevator*> elevators;
+        QList<Elevator*> elevators;
+        int numFloors;
 };
 
 #endif
