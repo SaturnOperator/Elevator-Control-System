@@ -26,8 +26,6 @@ class QElevatorModel : public QWidget {
     private:
         QScrollBar* car;
          QList<QLabel*> indicators; // Displays if elevator is coming or not
-
-        void updateScreen();
 };
 
 #endif // QELEVATORMODEL_H

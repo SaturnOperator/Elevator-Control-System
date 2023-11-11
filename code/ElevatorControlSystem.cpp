@@ -5,7 +5,7 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
 
     // Dynamically create and add each elevator
     for (int i = 0; i < numberElevators; i++) {
-        Elevator* e = new Elevator();
+        Elevator* e = new Elevator(this);
         elevators << e;
     }
 
@@ -36,21 +36,20 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
             });
         }
     }
-
 }
 
 Elevator* ElevatorControlSystem::getElevator(int i){
-    if(i < 0 || i >= getNumElevators()){
+    if(i < 0 || i > getNumElevators()){
         return nullptr;
     }
     return elevators[i];
 }
 
-int ElevatorControlSystem::getNumElevators(){
+int ElevatorControlSystem::getNumElevators() const{
     return elevators.size();
 }
 
-int ElevatorControlSystem::getNumFloors(){
+int ElevatorControlSystem::getNumFloors() const{
     return numFloors;
 }
 

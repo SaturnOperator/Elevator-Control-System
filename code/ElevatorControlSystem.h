@@ -27,9 +27,9 @@ class ElevatorControlSystem : public QObject {
         void fireSafetySequence();
         void outageSafetySequence();
 
+        int getNumElevators() const;
+        int getNumFloors() const;
         Elevator* getElevator(int i);
-        int getNumElevators();
-        int getNumFloors();
         QElevatorButton* getFloorButton(int floor, Direction dir);
 
     private:

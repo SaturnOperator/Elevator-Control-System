@@ -1,18 +1,21 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
-#include <QMap>
+// #include <QMap>
+#include <QList>
 #include <QDebug>
 
 #include "Display.h"
 #include "QElevatorPanel.h"
 #include "QElevatorModel.h"
 
+class ElevatorControlSystem;
+
 class Elevator : public QObject {
     Q_OBJECT
 
     public:
-        Elevator();
+        Elevator(ElevatorControlSystem* ecs);
 
         // User Actions
         bool closeDoors(); // Triggered by button or automatically, attempts to close door returns false and triggers obstruction if fails
@@ -22,12 +25,16 @@ class Elevator : public QObject {
 
         // System Actions
         bool fulfillRequest(); // Ascends/Descends one floor towards nearest floor requests 
+        bool moveUp();
+        bool moveDown();
+        void updateFloorIndicators();
+        void updateElevatorButtons();
+
         void alertECS();
         bool flagEmergency(EmergencyStatus e); // Appends emergency code to emergencyStatus
         bool clearEmergency(EmergencyStatus e);
         bool addFloorRequest(int floor);
         bool overrideGoToFloor(int floor); // Bypasses all requests and goes to floor f
-        void updateDisplay(int floor);
         bool pollObstructionSensor(); // False if no obstruction, true otherwise
 
         // Getters
@@ -44,12 +51,14 @@ class Elevator : public QObject {
         void kickPassengersOut();
 
     private:
+        ElevatorControlSystem* ecs;
         int floor;
         Direction direction;
         DoorStatus doorStatus;
         ElevatorStatus elevatorStatus;
         EmergencyStatus emergencyStatus;
-        QMap<int, Direction> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
+        // QMap<int, Direction> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
+        QList<int> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         QElevatorPanel* panel;
         QElevatorModel* model;
 

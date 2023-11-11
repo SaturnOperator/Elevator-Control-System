@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QGridLayout>
-#include <QSpacerItem>
+#include <QDebug>
 
 #include "ElevatorControlSystem.h"
 
@@ -24,9 +24,6 @@ int main(int argc, char *argv[])
         floorLabel->setStyleSheet(
             "QLabel { "
             "   font-size: 9px;"
-            // "    background-color: grey;"
-            // "   border: 1px solid gray; "
-            // "   padding: 5px; "
             "}"
         );
         mainLayout->addWidget(floorLabel, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton, 2, 1); //1+ecs->getNumElevators());        
@@ -54,6 +51,26 @@ int main(int argc, char *argv[])
         mainLayout->addWidget(e->getPanel(), rowElevatorModels+ecs->getNumFloors()*2+1, i+colElevatorModels);
 
     }
+
+    // Testing buttons
+    QWidget* testGroup = new QWidget();
+    QGridLayout* testGrid = new QGridLayout();
+    testGroup->setLayout(testGrid);
+    int colTestGroup = colElevatorModels+ecs->getNumElevators();
+    int rowTestGroup = rowElevatorModels;
+
+    QPushButton* runEcsButton = new QPushButton("ECS Run Cycle");
+
+    QObject::connect(runEcsButton, &QPushButton::clicked, [ecs]() {
+        for (int i = 0; i < ecs->getNumElevators(); i++) {
+            Elevator* e = ecs->getElevator(i);
+            e->fulfillRequest();
+        }
+    });
+
+    testGrid->addWidget(runEcsButton);
+    mainLayout->addWidget(testGroup, rowTestGroup, colTestGroup);
+
 
     // Create and show central widget
     QWidget* centralWidget = new QWidget;

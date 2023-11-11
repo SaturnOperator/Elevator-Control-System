@@ -1,7 +1,7 @@
 #include "QElevatorPanel.h"
 #include "Elevator.h" // Forward declaration
 
-QElevatorPanel::QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
+QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
     : QWidget(parent), elevator(elevator) {
     QVBoxLayout* layout = new QVBoxLayout;
     
@@ -124,3 +124,15 @@ void QElevatorPanel::clear(){
     errors->clear();
 }
 
+void QElevatorPanel::clearButtons(){
+    for(QElevatorButton* button: floorButtons){
+        button->setEnabled(true);
+    }
+}
+
+QElevatorButton* QElevatorPanel::getButton(int floor){
+    if(floor < 0 || floor >= NUM_FLOORS){
+        return nullptr;
+    }
+    return floorButtons.at(floor);
+}

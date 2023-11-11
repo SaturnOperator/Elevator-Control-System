@@ -23,9 +23,13 @@ class QElevatorPanel : public QWidget {
 
     public:
         explicit QElevatorPanel(Elevator* elevator, QWidget *parent = nullptr);
+        bool updateFloor(int floor);
         void addError(EmergencyStatus e);
         void clearError(EmergencyStatus e);
+        void clearButtons();
         void clear();
+
+        QElevatorButton* getButton(int floor);
 
     private:
         Elevator* elevator;
@@ -41,7 +45,6 @@ class QElevatorPanel : public QWidget {
         QElevatorButton* buttonHelp;
         QElevatorButton* buttonFire;
 
-        bool updateFloor(int floor);
 };
 
 #endif // QELEVATORPANEL_H
