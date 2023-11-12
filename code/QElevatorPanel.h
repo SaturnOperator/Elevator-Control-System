@@ -3,7 +3,7 @@
 
 #include "defs.h"
 
-#include <QWidget>
+#include <QGroupBox>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -18,7 +18,7 @@
 
 class Elevator; // Forward declaration
 
-class QElevatorPanel : public QWidget {
+class QElevatorPanel : public QGroupBox {
     Q_OBJECT
 
     public:

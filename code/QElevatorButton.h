@@ -14,6 +14,11 @@ class QElevatorButton : public QPushButton {
         explicit QElevatorButton(const QString &text, QWidget *parent = nullptr);
         void on();
         void off();
+        void stylize();
+        void setSize(int size);
+
+    private:
+        int size;
 };
 
 #endif // QELEVATORBUTTON_H

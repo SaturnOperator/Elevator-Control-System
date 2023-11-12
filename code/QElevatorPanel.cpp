@@ -2,9 +2,9 @@
 #include "Elevator.h" // Forward declaration
 
 QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
-    : QWidget(parent), elevator(elevator) {
+    : QGroupBox(parent), elevator(elevator) {
     QVBoxLayout* layout = new QVBoxLayout;
-    
+
     titleLabel = new QLabel("Elevator Panel", this);
     layout->addWidget(titleLabel);
 

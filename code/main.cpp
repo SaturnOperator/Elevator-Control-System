@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include <QGridLayout>
 #include <QDebug>
+#include <QScrollArea>
 
 #include "ElevatorControlSystem.h"
 
@@ -10,33 +11,35 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QMainWindow mainWindow;
     mainWindow.setWindowTitle("Elevator Panels");
-    QGridLayout* mainLayout = new QGridLayout;
 
+    QGridLayout* mainLayout = new QGridLayout;
 
     ElevatorControlSystem *ecs = new ElevatorControlSystem(NUM_FLOORS, NUM_ELEVATORS);
     
     int colFloorButton = 0;
     int rowFloorButton = 1;
-    // QSpacerItem* buttonSpacer = new QSpacerItem(26, 26, QSizePolicy::Fixed, QSizePolicy::Fixed);
+    mainLayout->addWidget(new QLabel("Floors"), rowFloorButton-1, colFloorButton, 1, 1);
     for (int i = 1; i <= ecs->getNumFloors(); i++) {
-        // Add label for each floor
-        QLabel* floorLabel = new QLabel("   " + QString::number(i));
-        floorLabel->setStyleSheet(
-            "QLabel { "
-            "   font-size: 9px;"
-            "}"
-        );
-        mainLayout->addWidget(floorLabel, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton, 2, 1); //1+ecs->getNumElevators());        
+        QGroupBox* floorButtonBox = new QGroupBox(" " + QString::number(i));
+        floorButtonBox->setAlignment(Qt::AlignCenter);
+        floorButtonBox->setLayout(new QVBoxLayout());
+        floorButtonBox->layout()->setContentsMargins(2, 2, 2, 2);
+        floorButtonBox->setMaximumWidth(28);
+
         // Get floor buttons
         QElevatorButton* upButton = ecs->getFloorButton(i, Direction::UP);
         QElevatorButton* downButton = ecs->getFloorButton(i, Direction::DOWN);
+        upButton->setSize(18);
+        downButton->setSize(18);
         
-        // Up button doesn't exist at topmost floor, put spacer instead
-        mainLayout->addWidget(upButton, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);
-        mainLayout->addWidget(downButton, 2 * (ecs->getNumFloors() - i)+1 + rowFloorButton, colFloorButton);
+        floorButtonBox->layout()->addWidget(upButton);
+        floorButtonBox->layout()->addWidget(downButton);
+        mainLayout->addWidget(floorButtonBox, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);
+
+
+        // mainLayout->addWidget(upButton, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);
+        // mainLayout->addWidget(downButton, 2 * (ecs->getNumFloors() - i)+1 + rowFloorButton, colFloorButton);
     }
-
-
 
     // Add elevator buttons and elevator models into the view
     int colElevatorModels = colFloorButton+1;
@@ -75,8 +78,16 @@ int main(int argc, char *argv[])
     // Create and show central widget
     QWidget* centralWidget = new QWidget;
     centralWidget->setLayout(mainLayout);
-    mainWindow.setCentralWidget(centralWidget);
-    mainWindow.show();
 
+    // Put everything in a scrollable area
+    QScrollArea* scrollArea = new QScrollArea(&mainWindow);
+    scrollArea->setWidget(centralWidget);
+    mainWindow.setCentralWidget(scrollArea);
+
+    // Resize to fit everything
+    mainWindow.resize(centralWidget->sizeHint());
+
+    // Show window and run app
+    mainWindow.show();
     return app.exec();
 }
