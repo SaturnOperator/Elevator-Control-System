@@ -46,13 +46,8 @@ void QErrorIndicator::updateScreen(){
     fireIcon->setEnabled(value & static_cast<int>(EmergencyStatus::FIRE));
 }
 
-void QErrorIndicator::addError(EmergencyStatus e){
-    value |= static_cast<int>(e);
-    updateScreen();
-}
-
-void QErrorIndicator::clearError(EmergencyStatus e){
-    value &= ~static_cast<int>(e);
+void QErrorIndicator::setErrorCode(int errors){
+    value = errors;
     updateScreen();
 }
 

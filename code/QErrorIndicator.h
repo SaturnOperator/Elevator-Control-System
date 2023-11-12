@@ -15,8 +15,7 @@ class QErrorIndicator : public QWidget {
 
     public:
         explicit QErrorIndicator(QWidget *parent = nullptr);
-        void addError(EmergencyStatus e);
-        void clearError(EmergencyStatus e);
+        void setErrorCode(int errors);
         void clear();
 
         int getValue() const { return value; }

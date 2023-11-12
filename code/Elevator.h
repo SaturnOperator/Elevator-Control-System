@@ -4,6 +4,7 @@
 // #include <QMap>
 #include <QList>
 #include <QDebug>
+#include <QTimer>
 
 #include "Display.h"
 #include "QElevatorPanel.h"
@@ -30,9 +31,9 @@ class Elevator : public QObject {
         void updateFloorIndicators();
         void updateElevatorButtons();
 
-        void alertECS();
-        bool flagEmergency(EmergencyStatus e); // Appends emergency code to emergencyStatus
-        bool clearEmergency(EmergencyStatus e);
+        void alertECS(EmergencyStatus e);
+        void flagEmergency(EmergencyStatus e); // Appends emergency code to emergencyStatus
+        void clearEmergency(EmergencyStatus e);
         bool addFloorRequest(int floor);
         bool overrideGoToFloor(int floor); // Bypasses all requests and goes to floor f
         bool pollObstructionSensor(); // False if no obstruction, true otherwise
@@ -42,7 +43,7 @@ class Elevator : public QObject {
         Direction getDirection() const;
         DoorStatus getDoorStatus() const;
         ElevatorStatus getStatus() const;
-        EmergencyStatus getEmergencyStatus() const;
+        int getEmergencyStatus() const;
         QElevatorPanel* getPanel() const;
         QElevatorModel* getModel() const;
 
@@ -56,11 +57,13 @@ class Elevator : public QObject {
         Direction direction;
         DoorStatus doorStatus;
         ElevatorStatus elevatorStatus;
-        EmergencyStatus emergencyStatus;
+        int emergencyStatus;
         // QMap<int, Direction> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         QList<int> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         QElevatorPanel* panel;
         QElevatorModel* model;
+
+        QTimer* timer;
 
         int load;
         int maxLoad;

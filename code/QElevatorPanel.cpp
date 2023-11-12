@@ -55,6 +55,11 @@ QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
         controlButtonsLayout->addWidget(button);
     }
 
+    connect(buttonFire, &QPushButton::clicked, this, [elevator]() {
+        // Add request to elevator when button is pressed
+        elevator->alertECS(EmergencyStatus::FIRE);
+    });
+
     /* FLOOR BUTTONS */
 
     // Put floor buttons horizontally in HBox
@@ -70,9 +75,10 @@ QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
     
         // Connect floorButton's clicked() signal to update screen
         connect(floorButton, &QPushButton::clicked, this, [floorButton, elevator, floor]() {
-            // @@@@ Change this function to add to elevator queue
-            elevator->requestFloor(floor);
-            floorButton->on();
+            // Add request to elevator when button is pressed
+            if(elevator->requestFloor(floor)){
+                floorButton->on(); // Illuminate the button if the request is accepted
+            }
         });
     }
 
@@ -86,11 +92,6 @@ QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
     // Initialize at first floor
     floor = 1;
     updateFloor(1);
-    errors->clear();
-    // addError(EmergencyStatus::FIRE);
-    // addError(EmergencyStatus::OVERLOAD);
-    // addError(EmergencyStatus::OBSTRUCTION);
-    // clearError(EmergencyStatus::OVERLOAD);
 }
 
 bool QElevatorPanel::updateFloor(int floor){
@@ -112,16 +113,8 @@ bool QElevatorPanel::updateFloor(int floor){
     return true;
 }
 
-void QElevatorPanel::addError(EmergencyStatus e){
-    errors->addError(e);
-}
-
-void QElevatorPanel::clearError(EmergencyStatus e){
-    errors->clearError(e);
-}
-
-void QElevatorPanel::clear(){
-    errors->clear();
+void QElevatorPanel::showErrors(){
+    errors->setErrorCode(elevator->getEmergencyStatus());
 }
 
 void QElevatorPanel::clearButtons(){

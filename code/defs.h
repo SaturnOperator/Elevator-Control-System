@@ -1,10 +1,12 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#define NUM_ELEVATORS  2
+#define NUM_ELEVATORS  5
 #define NUM_FLOORS 4
 
 #define MAX_LOAD 5000
+
+#define ELVATOR_MOVE_DELAY 1000
 
 enum class Direction {
     NONE  = 0x0,

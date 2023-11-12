@@ -24,9 +24,8 @@ class QElevatorPanel : public QGroupBox {
     public:
         explicit QElevatorPanel(Elevator* elevator, QWidget *parent = nullptr);
         bool updateFloor(int floor);
-        void addError(EmergencyStatus e);
-        void clearError(EmergencyStatus e);
         void clearButtons();
+        void showErrors();
         void clear();
 
         QElevatorButton* getButton(int floor);

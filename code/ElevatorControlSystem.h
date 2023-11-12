@@ -16,6 +16,7 @@ class ElevatorControlSystem : public QObject {
         Elevator* findBestElevator(int floor = 1);
         void elevatorRequest(Elevator* e, Floor f);
         void updateButtons();
+        void resetButtons();
 
         // Emergency Actions
         void helpSafetySequence();
@@ -24,18 +25,28 @@ class ElevatorControlSystem : public QObject {
         void helpCall911();
         void addressEmergency(Elevator* e, EmergencyStatus status);
 
-        void fireSafetySequence();
-        void outageSafetySequence();
+        void activateFireSafetySequence();
+        void clearFire();
+        void activateOutageSafetySequence();
+        void clearOutage();
 
         int getNumElevators() const;
         int getNumFloors() const;
         Elevator* getElevator(int i);
         QElevatorButton* getFloorButton(int floor, Direction dir);
+        QList<QPushButton*> getAdminButtons() const;
 
     private:
+        int numFloors;
         QList<Elevator*> elevators;
         QMap<int, QMap<Direction, QElevatorButton*>> floorButtons;
-        int numFloors;
+        int emergencyStatus;
+        QPushButton* outageTestButton;
+        QPushButton* fireTestButton;
+        QPushButton* helpResonseButton;
+        QList<QPushButton*> adminButtons;
+
+        void toggleEmergencyState(EmergencyStatus e);
 };
 
 #endif

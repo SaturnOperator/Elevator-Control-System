@@ -14,8 +14,10 @@ int main(int argc, char *argv[])
 
     QGridLayout* mainLayout = new QGridLayout;
 
+    // Instantiate ECS
     ElevatorControlSystem *ecs = new ElevatorControlSystem(NUM_FLOORS, NUM_ELEVATORS);
     
+    /* Get floor buttons from ECS and put them in the grid layout */
     int colFloorButton = 0;
     int rowFloorButton = 1;
     mainLayout->addWidget(new QLabel("Floors"), rowFloorButton-1, colFloorButton, 1, 1);
@@ -26,22 +28,13 @@ int main(int argc, char *argv[])
         floorButtonBox->layout()->setContentsMargins(2, 2, 2, 2);
         floorButtonBox->setMaximumWidth(28);
 
-        // Get floor buttons
-        QElevatorButton* upButton = ecs->getFloorButton(i, Direction::UP);
-        QElevatorButton* downButton = ecs->getFloorButton(i, Direction::DOWN);
-        upButton->setSize(18);
-        downButton->setSize(18);
         
-        floorButtonBox->layout()->addWidget(upButton);
-        floorButtonBox->layout()->addWidget(downButton);
-        mainLayout->addWidget(floorButtonBox, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);
+        // Add floor buttons to the main grid
+        floorButtonBox->layout()->addWidget(ecs->getFloorButton(i, Direction::UP));
+        floorButtonBox->layout()->addWidget(ecs->getFloorButton(i, Direction::DOWN));
+        mainLayout->addWidget(floorButtonBox, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);    }
 
-
-        // mainLayout->addWidget(upButton, 2 * (ecs->getNumFloors() - i) + rowFloorButton, colFloorButton);
-        // mainLayout->addWidget(downButton, 2 * (ecs->getNumFloors() - i)+1 + rowFloorButton, colFloorButton);
-    }
-
-    // Add elevator buttons and elevator models into the view
+    /* Add elevator buttons and elevator models into the view */
     int colElevatorModels = colFloorButton+1;
     int rowElevatorModels = rowFloorButton;
     for (int i = 0; i < ecs->getNumElevators(); i++) {
@@ -55,15 +48,20 @@ int main(int argc, char *argv[])
 
     }
 
-    // Testing buttons
-    QWidget* testGroup = new QWidget();
+    /* Create test buttons for toggling emergency states */
+    QGroupBox* testGroup = new QGroupBox();
     QGridLayout* testGrid = new QGridLayout();
     testGroup->setLayout(testGrid);
-    int colTestGroup = colElevatorModels+ecs->getNumElevators();
-    int rowTestGroup = rowElevatorModels;
 
+    int colTestGroup = 0;
+    int rowTestGroup = rowElevatorModels+ecs->getNumFloors()*2+1;
+    mainLayout->addWidget(testGroup, rowTestGroup, colTestGroup);
+
+    testGrid->addWidget(new QLabel("ECS Admin Panel"));
+
+    // Button for running 1 ECS cycle, overrides the timer
     QPushButton* runEcsButton = new QPushButton("ECS Run Cycle");
-
+    testGrid->addWidget(runEcsButton);
     QObject::connect(runEcsButton, &QPushButton::clicked, [ecs]() {
         for (int i = 0; i < ecs->getNumElevators(); i++) {
             Elevator* e = ecs->getElevator(i);
@@ -71,9 +69,9 @@ int main(int argc, char *argv[])
         }
     });
 
-    testGrid->addWidget(runEcsButton);
-    mainLayout->addWidget(testGroup, rowTestGroup, colTestGroup);
-
+    for(QPushButton* button : ecs->getAdminButtons()){
+        testGrid->addWidget(button);
+    }
 
     // Create and show central widget
     QWidget* centralWidget = new QWidget;

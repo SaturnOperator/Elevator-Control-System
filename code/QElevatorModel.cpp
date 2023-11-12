@@ -8,7 +8,7 @@ QElevatorModel::QElevatorModel(QWidget *parent) : QWidget(parent) {
     car = new QScrollBar(Qt::Vertical);
     layout->addWidget(car, 0, 0, NUM_FLOORS*2, 1);
     
-    car->setMinimumHeight(60*NUM_FLOORS);
+    car->setMinimumHeight(40*NUM_FLOORS);
 
     car->setMinimum(1);
     car->setMaximum(NUM_FLOORS);
