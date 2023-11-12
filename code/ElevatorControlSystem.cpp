@@ -3,11 +3,16 @@
 ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevators){
     numFloors = numberFloors;
     emergencyStatus = static_cast<int>(EmergencyStatus::NONE);
-
     /* Dynamically create and add each elevator */
     for (int i = 0; i < numberElevators; i++) {
         Elevator* e = new Elevator(this);
         elevators << e;
+
+        // Put each elevator on its own thread
+        QThread* thread = new QThread;
+        elevatorThreads << thread;
+        e->moveToThread(thread);
+        thread->start();
     }
 
     /* Create all floor request buttons */
@@ -48,18 +53,22 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     }
 
     /*Create ECS Admin buttons for testing and clearing error statuses */
+
+    // Outage button
     outageTestButton = new QPushButton("Toggle Power Outage");
     adminButtons << outageTestButton;
     QObject::connect(outageTestButton, &QPushButton::clicked, [this]() {
         toggleEmergencyState(EmergencyStatus::OUTAGE);
     });
 
+    // Fire button
     fireTestButton = new QPushButton("Toggle Fire Alarm");
     adminButtons << fireTestButton;
     QObject::connect(fireTestButton, &QPushButton::clicked, [this]() {
         toggleEmergencyState(EmergencyStatus::FIRE);
     });
 
+    // Help button
     helpResonseButton = new QPushButton("Respond to help call");
     adminButtons << helpResonseButton;
     QObject::connect(helpResonseButton, &QPushButton::clicked, [this]() {
@@ -69,7 +78,45 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
         }
     });
 
+    // Overload simulator picker
+    obstructionSelector = new QComboBox();
+    obstructionSelector->addItem("Select elevator", QVariant::fromValue(nullptr));
+    for (int i = 0; i < getNumElevators(); i++) {
+        obstructionSelector->addItem("Elevator " + QString::number(i+1), QVariant::fromValue(getElevator(i)));
+    }
+    QObject::connect(obstructionSelector, &QComboBox::currentIndexChanged, [this]() {
 
+        for(Elevator* e : elevators){
+            e->clearEmergency(EmergencyStatus::OBSTRUCTION);
+        }
+
+        // // Get the selected elevator pointer from the combo box
+        Elevator* e = qvariant_cast<Elevator*>(obstructionSelector->currentData());
+
+        if (e) {
+            e->flagEmergency(EmergencyStatus::OBSTRUCTION);
+        }
+    });
+
+    // Overload simulator picker
+    overloadSelector = new QComboBox();
+    overloadSelector->addItem("Select elevator", QVariant::fromValue(nullptr));
+    for (int i = 0; i < getNumElevators(); i++) {
+        overloadSelector->addItem("Elevator " + QString::number(i+1), QVariant::fromValue(getElevator(i)));
+    }
+    QObject::connect(overloadSelector, &QComboBox::currentIndexChanged, [this]() {
+
+        for(Elevator* e : elevators){
+            e->clearEmergency(EmergencyStatus::OVERLOAD);
+        }
+
+        // // Get the selected elevator pointer from the combo box
+        Elevator* e = qvariant_cast<Elevator*>(overloadSelector->currentData());
+
+        if (e) {
+            e->flagEmergency(EmergencyStatus::OVERLOAD);
+        }
+    });
 }
 
 Elevator* ElevatorControlSystem::getElevator(int i){
@@ -99,6 +146,13 @@ QElevatorButton* ElevatorControlSystem::getFloorButton(int floor, Direction dir)
     return floorButtons[floor][dir];
 }
 
+QComboBox* ElevatorControlSystem::getOverloadSelector() const{
+    return overloadSelector;
+}
+
+QComboBox* ElevatorControlSystem::getObstructionSelector() const{
+    return obstructionSelector;
+}
 
 Elevator* ElevatorControlSystem::findBestElevator(int floor){
     if (elevators.isEmpty()) {
@@ -108,7 +162,17 @@ Elevator* ElevatorControlSystem::findBestElevator(int floor){
     Elevator* best = elevators.at(0);
     int closestDistance = abs(best->getFloor() - floor);
 
+    // If the first elevator isn't available, set this to an arbitrarily high floor count delta
+    // So the next available elevator becomes best 
+    if(best->getEmergencyStatus() != 0){
+        closestDistance = 2*numFloors;
+    }
+
     for(Elevator* e : elevators){
+        if(e->getEmergencyStatus() != 0){
+            continue;
+        }
+
         int currentDistance = abs(e->getFloor() - floor);
         if (currentDistance < closestDistance) {
             best = e;

@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
         floorButtonBox->layout()->setContentsMargins(2, 2, 2, 2);
         floorButtonBox->setMaximumWidth(28);
 
-        
         // Add floor buttons to the main grid
         floorButtonBox->layout()->addWidget(ecs->getFloorButton(i, Direction::UP));
         floorButtonBox->layout()->addWidget(ecs->getFloorButton(i, Direction::DOWN));
@@ -72,6 +71,12 @@ int main(int argc, char *argv[])
     for(QPushButton* button : ecs->getAdminButtons()){
         testGrid->addWidget(button);
     }
+
+    testGrid->addWidget(new QLabel("Simulate Obstruction"));
+    testGrid->addWidget(ecs->getObstructionSelector());
+
+    testGrid->addWidget(new QLabel("Simulate Overload"));
+    testGrid->addWidget(ecs->getOverloadSelector());
 
     // Create and show central widget
     QWidget* centralWidget = new QWidget;

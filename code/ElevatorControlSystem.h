@@ -1,6 +1,9 @@
 #ifndef ELEVATORCONTROLSYSTEM_H
 #define ELEVATORCONTROLSYSTEM_H
 
+#include <QThread>
+#include <QComboBox>
+
 #include "Elevator.h"
 
 class ElevatorControlSystem : public QObject {
@@ -35,6 +38,8 @@ class ElevatorControlSystem : public QObject {
         Elevator* getElevator(int i);
         QElevatorButton* getFloorButton(int floor, Direction dir);
         QList<QPushButton*> getAdminButtons() const;
+        QComboBox* getOverloadSelector() const;
+        QComboBox* getObstructionSelector() const;
 
     private:
         int numFloors;
@@ -45,6 +50,10 @@ class ElevatorControlSystem : public QObject {
         QPushButton* fireTestButton;
         QPushButton* helpResonseButton;
         QList<QPushButton*> adminButtons;
+        QComboBox* overloadSelector;
+        QComboBox* obstructionSelector;
+
+        QList<QThread*> elevatorThreads; // Run each elevator on its own thread
 
         void toggleEmergencyState(EmergencyStatus e);
 };
