@@ -68,16 +68,6 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
         toggleEmergencyState(EmergencyStatus::FIRE);
     });
 
-    // Help button
-    helpResonseButton = new QPushButton("Respond to help call");
-    adminButtons << helpResonseButton;
-    QObject::connect(helpResonseButton, &QPushButton::clicked, [this]() {
-        for (int i = 0; i < this->getNumElevators(); i++) {
-            Elevator* e = this->getElevator(i);
-            e->fulfillRequest();
-        }
-    });
-
     // Overload simulator picker
     obstructionSelector = new QComboBox();
     obstructionSelector->addItem("Select elevator", QVariant::fromValue(nullptr));
@@ -87,13 +77,17 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     QObject::connect(obstructionSelector, &QComboBox::currentIndexChanged, [this]() {
 
         for(Elevator* e : elevators){
-            e->clearEmergency(EmergencyStatus::OBSTRUCTION);
+            if(e->getEmergencyStatus() & static_cast<int>(EmergencyStatus::OBSTRUCTION)){
+                e->clearEmergency(EmergencyStatus::OBSTRUCTION);
+                e->closeDoors();
+            }
         }
 
         // // Get the selected elevator pointer from the combo box
         Elevator* e = qvariant_cast<Elevator*>(obstructionSelector->currentData());
 
         if (e) {
+            e->openDoors();
             e->flagEmergency(EmergencyStatus::OBSTRUCTION);
         }
     });
@@ -107,15 +101,40 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     QObject::connect(overloadSelector, &QComboBox::currentIndexChanged, [this]() {
 
         for(Elevator* e : elevators){
-            e->clearEmergency(EmergencyStatus::OVERLOAD);
+            if(e->getEmergencyStatus() & static_cast<int>(EmergencyStatus::OVERLOAD)){
+                e->clearEmergency(EmergencyStatus::OVERLOAD);
+                e->closeDoors();
+            }
         }
 
         // // Get the selected elevator pointer from the combo box
         Elevator* e = qvariant_cast<Elevator*>(overloadSelector->currentData());
 
         if (e) {
+            e->openDoors();
             e->flagEmergency(EmergencyStatus::OVERLOAD);
         }
+    });
+
+    // Create timer for help response 
+    helpTimer = new QTimer(this);
+    helpTimer->setSingleShot(true);
+    helpLoop = new QEventLoop(this);
+    QObject::connect(helpTimer, &QTimer::timeout, helpLoop, &QEventLoop::quit);
+
+    // Create help response button
+    helpResponseButton = new QPushButton("Respond to help call");
+    adminButtons << helpResponseButton;
+    QObject::connect(helpResponseButton, &QPushButton::clicked, [this]() {
+        helpCallResponded = true;
+        // Clear emergency state
+        for(Elevator* e : elevators){
+            if(e->getEmergencyStatus() & static_cast<int>(EmergencyStatus::HELP)){
+                e->clearEmergency(EmergencyStatus::HELP);
+            }
+        }
+
+        helpLoop->quit(); // Stop timer loop when button is pressed
     });
 }
 
@@ -237,6 +256,32 @@ void ElevatorControlSystem::clearOutage(){
     for(Elevator* e: elevators){
         e->clearEmergency(EmergencyStatus::OUTAGE);
     }
+}
+
+bool ElevatorControlSystem::helpSafetySequence(Elevator* e){
+    helpCallResponded = false;
+    qInfo() << "Help is required in" << e;
+    e->flagEmergency(EmergencyStatus::HELP);
+
+    helpTimer->start(5000); // 5s timer 
+    helpLoop->exec();
+
+    if (helpCallResponded == false) {
+        // The timer timed out, 5 seconds have passed
+        qInfo() << "No response after 5s, forwarding call to emergency services" << e;
+        helpCall911();
+        return false;
+    } else {
+        // helpResponseButton was pressed
+        qInfo() << "Building services have responded to help call in " << e;
+        return true;
+    }
+
+    return true;
+}
+
+void ElevatorControlSystem::helpCall911(){
+    qInfo() << "Calling 911";
 }
 
 void ElevatorControlSystem::toggleEmergencyState(EmergencyStatus e){

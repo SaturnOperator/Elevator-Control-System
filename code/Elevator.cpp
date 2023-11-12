@@ -91,6 +91,8 @@ bool Elevator::fulfillRequest(){
     ecs->getFloorButton(floor, Direction::DOWN)->setEnabled(true);
     direction = Direction::NONE;
     panel->updateFloor(floor);
+    openDoors();
+    closeDoors();
     return true;
 }
 
@@ -159,4 +161,26 @@ bool Elevator::overrideGoToFloor(int safeFloor){
     // Send elevator to safe floor
     model->setFloorIndicator(safeFloor, true);
     requests << safeFloor;
+    return true;
+}
+
+bool Elevator::helpButton(){
+    return ecs->helpSafetySequence(this);
+}
+
+
+bool Elevator::closeDoors(){
+    if(emergencyStatus & static_cast<int>(EmergencyStatus::OBSTRUCTION)){
+        qInfo() <<  this << " Cannot close door due to obsruction";
+        return false;
+    }
+    doorStatus = DoorStatus::CLOSE;
+    qInfo() <<  this << " Closing Doors";
+    return true;
+}
+
+bool Elevator::openDoors(){
+    doorStatus = DoorStatus::OPEN;
+    qInfo() <<  this << " Opening Doors";
+    return true;
 }

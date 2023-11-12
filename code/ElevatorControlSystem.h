@@ -2,7 +2,9 @@
 #define ELEVATORCONTROLSYSTEM_H
 
 #include <QThread>
+#include <QEventLoop>
 #include <QComboBox>
+
 
 #include "Elevator.h"
 
@@ -22,12 +24,9 @@ class ElevatorControlSystem : public QObject {
         void resetButtons();
 
         // Emergency Actions
-        void helpSafetySequence();
-        bool helpReceiveResponse(Elevator* e);
-        bool helpCallBuilding();
+        bool helpSafetySequence(Elevator* e);
         void helpCall911();
         void addressEmergency(Elevator* e, EmergencyStatus status);
-
         void activateFireSafetySequence();
         void clearFire();
         void activateOutageSafetySequence();
@@ -48,10 +47,14 @@ class ElevatorControlSystem : public QObject {
         int emergencyStatus;
         QPushButton* outageTestButton;
         QPushButton* fireTestButton;
-        QPushButton* helpResonseButton;
+        QPushButton* helpResponseButton;
         QList<QPushButton*> adminButtons;
         QComboBox* overloadSelector;
         QComboBox* obstructionSelector;
+
+        QTimer* helpTimer;
+        QEventLoop* helpLoop;
+        bool helpCallResponded;
 
         QList<QThread*> elevatorThreads; // Run each elevator on its own thread
 

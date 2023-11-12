@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QTimer>
 
-#include "Display.h"
 #include "QElevatorPanel.h"
 #include "QElevatorModel.h"
 
@@ -22,7 +21,7 @@ class Elevator : public QObject {
         bool closeDoors(); // Triggered by button or automatically, attempts to close door returns false and triggers obstruction if fails
         bool openDoors(); // Triggered by button or automatically
         bool requestFloor(int floor, Direction dir = Direction::NONE); // Floor f button pressed
-        void helpButton(); // Help button pressed
+        bool helpButton(); // Help button pressed
 
         // System Actions
         bool fulfillRequest(); // Ascends/Descends one floor towards nearest floor requests 
@@ -36,7 +35,6 @@ class Elevator : public QObject {
         void clearEmergency(EmergencyStatus e);
         bool addFloorRequest(int floor);
         bool overrideGoToFloor(int floor); // Bypasses all requests and goes to floor f
-        bool pollObstructionSensor(); // False if no obstruction, true otherwise
 
         // Getters
         int getFloor() const;

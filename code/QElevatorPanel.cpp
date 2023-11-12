@@ -54,10 +54,23 @@ QElevatorPanel::QElevatorPanel(Elevator* elevator, QWidget *parent)
     for (QElevatorButton* button : controlButtons) {
         controlButtonsLayout->addWidget(button);
     }
+    
+    connect(buttonDoorOpen, &QPushButton::clicked, this, [elevator]() {
+        elevator->openDoors();
+    });
+    
+    connect(buttonDoorClose, &QPushButton::clicked, this, [elevator]() {
+        elevator->closeDoors();
+    });
 
     connect(buttonFire, &QPushButton::clicked, this, [elevator]() {
-        // Add request to elevator when button is pressed
+        // Make elevator alert ECS of fire event
         elevator->alertECS(EmergencyStatus::FIRE);
+    });
+
+    connect(buttonHelp, &QPushButton::clicked, this, [elevator]() {
+        // Make elevator alert ECS help event
+        elevator->helpButton();
     });
 
     /* FLOOR BUTTONS */

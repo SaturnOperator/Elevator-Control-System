@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     int rowElevatorModels = rowFloorButton;
     for (int i = 0; i < ecs->getNumElevators(); i++) {
         // Add elevator label
-        mainLayout->addWidget(new QLabel("Elevator " + QString::number(i)), rowElevatorModels-1, i+colElevatorModels, 1, 1);
+        mainLayout->addWidget(new QLabel("Elevator " + QString::number(i+1)), rowElevatorModels-1, i+colElevatorModels, 1, 1);
         
         // Add the elevator's panel into the GUI
         Elevator* e = ecs->getElevator(i);
