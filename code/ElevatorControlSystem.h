@@ -14,13 +14,8 @@ class ElevatorControlSystem : public QObject {
     public:
         ElevatorControlSystem(int numFloors, int numElevators);
         
-        // User Actions
-        bool requestFloor(Floor f, Direction dir);
-
         // System Actions
         Elevator* findBestElevator(int floor = 1);
-        void elevatorRequest(Elevator* e, Floor f);
-        void updateButtons();
         void resetButtons();
 
         // Emergency Actions

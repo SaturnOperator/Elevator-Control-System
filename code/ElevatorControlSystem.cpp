@@ -78,8 +78,7 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
 
         for(Elevator* e : elevators){
             if(e->getEmergencyStatus() & static_cast<int>(EmergencyStatus::OBSTRUCTION)){
-                e->clearEmergency(EmergencyStatus::OBSTRUCTION);
-                e->closeDoors();
+                e->setLoad(0);
             }
         }
 
@@ -87,8 +86,7 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
         Elevator* e = qvariant_cast<Elevator*>(obstructionSelector->currentData());
 
         if (e) {
-            e->openDoors();
-            e->flagEmergency(EmergencyStatus::OBSTRUCTION);
+            e->setLoad(2*MAX_LOAD);
         }
     });
 

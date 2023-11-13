@@ -45,9 +45,8 @@ class Elevator : public QObject {
         QElevatorPanel* getPanel() const;
         QElevatorModel* getModel() const;
 
-        // Other
-        bool underLimit(); // Checks if load is under the limit
-        void kickPassengersOut();
+        // Setters
+        void setLoad(int n);
 
     private:
         ElevatorControlSystem* ecs;
@@ -67,6 +66,7 @@ class Elevator : public QObject {
         int maxLoad;
 
         bool setStatus(ElevatorStatus e); // Idle, moving or error
+        bool underLimit(); // Checks if load is under the limit
 
 };
 

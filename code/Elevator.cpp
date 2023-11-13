@@ -45,6 +45,10 @@ bool Elevator::requestFloor(int floor, Direction dir){
 
 bool Elevator::fulfillRequest(){
 
+    if(!underLimit()){
+        return false;
+    }
+
     if (doorStatus != DoorStatus::CLOSE) {
         return false; // Door is open
     }
@@ -183,4 +187,21 @@ bool Elevator::openDoors(){
     doorStatus = DoorStatus::OPEN;
     qInfo() <<  this << " Opening Doors";
     return true;
+}
+
+bool Elevator::underLimit(){
+    if(load <= maxLoad){
+        if(getEmergencyStatus() & static_cast<int>(EmergencyStatus::OBSTRUCTION)){
+            clearEmergency(EmergencyStatus::OBSTRUCTION);
+            closeDoors();
+        }
+        return true;
+    } else {
+        openDoors();
+        flagEmergency(EmergencyStatus::OBSTRUCTION);
+    }
+}
+
+void Elevator::setLoad(int n){
+    load = n;
 }
