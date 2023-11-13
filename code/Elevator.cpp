@@ -140,9 +140,11 @@ void Elevator::alertECS(EmergencyStatus e){
 
 void Elevator::flagEmergency(EmergencyStatus e){
     // Set emergency status and update the screen to show the error
-    emergencyStatus |= static_cast<int>(e);
-    panel->showErrors();
-    qInfo() << "Emergency flagged in" << this;
+    if(!(emergencyStatus & static_cast<int>(e))){
+        emergencyStatus |= static_cast<int>(e);
+        panel->showErrors();
+        qInfo() << "Emergency flagged in" << this;
+    }
 }
 
 void Elevator::clearEmergency(EmergencyStatus e){
@@ -178,14 +180,18 @@ bool Elevator::closeDoors(){
         qInfo() <<  this << " Cannot close door due to obsruction";
         return false;
     }
-    doorStatus = DoorStatus::CLOSE;
-    qInfo() <<  this << " Closing Doors";
+    if(doorStatus != DoorStatus::CLOSE){
+        doorStatus = DoorStatus::CLOSE;
+        qInfo() <<  this << " Closing Doors";
+    }
     return true;
 }
 
 bool Elevator::openDoors(){
-    doorStatus = DoorStatus::OPEN;
-    qInfo() <<  this << " Opening Doors";
+    if(doorStatus != DoorStatus::OPEN){
+        doorStatus = DoorStatus::OPEN;
+        qInfo() <<  this << " Opening Doors";
+    }
     return true;
 }
 

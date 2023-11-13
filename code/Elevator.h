@@ -55,7 +55,6 @@ class Elevator : public QObject {
         DoorStatus doorStatus;
         ElevatorStatus elevatorStatus;
         int emergencyStatus;
-        // QMap<int, Direction> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         QList<int> requests; // Stores all the floor requests in order, fulfillRequest() completes these requests
         QElevatorPanel* panel;
         QElevatorModel* model;

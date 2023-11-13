@@ -57,14 +57,14 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     // Outage button
     outageTestButton = new QPushButton("Toggle Power Outage");
     adminButtons << outageTestButton;
-    QObject::connect(outageTestButton, &QPushButton::clicked, [this]() {
+    connect(outageTestButton, &QPushButton::clicked, [this]() {
         toggleEmergencyState(EmergencyStatus::OUTAGE);
     });
 
     // Fire button
     fireTestButton = new QPushButton("Toggle Fire Alarm");
     adminButtons << fireTestButton;
-    QObject::connect(fireTestButton, &QPushButton::clicked, [this]() {
+    connect(fireTestButton, &QPushButton::clicked, [this]() {
         toggleEmergencyState(EmergencyStatus::FIRE);
     });
 
@@ -74,7 +74,8 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     for (int i = 0; i < getNumElevators(); i++) {
         obstructionSelector->addItem("Elevator " + QString::number(i+1), QVariant::fromValue(getElevator(i)));
     }
-    QObject::connect(obstructionSelector, &QComboBox::currentIndexChanged, [this]() {
+
+    connect(obstructionSelector, QOverload<int>::of(&QComboBox::currentIndexChanged), [this]() {
 
         for(Elevator* e : elevators){
             if(e->getEmergencyStatus() & static_cast<int>(EmergencyStatus::OBSTRUCTION)){
@@ -96,8 +97,8 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     for (int i = 0; i < getNumElevators(); i++) {
         overloadSelector->addItem("Elevator " + QString::number(i+1), QVariant::fromValue(getElevator(i)));
     }
-    QObject::connect(overloadSelector, &QComboBox::currentIndexChanged, [this]() {
 
+    connect(overloadSelector, QOverload<int>::of(&QComboBox::currentIndexChanged), [this]() {
         for(Elevator* e : elevators){
             if(e->getEmergencyStatus() & static_cast<int>(EmergencyStatus::OVERLOAD)){
                 e->clearEmergency(EmergencyStatus::OVERLOAD);
@@ -118,12 +119,12 @@ ElevatorControlSystem::ElevatorControlSystem(int numberFloors, int numberElevato
     helpTimer = new QTimer(this);
     helpTimer->setSingleShot(true);
     helpLoop = new QEventLoop(this);
-    QObject::connect(helpTimer, &QTimer::timeout, helpLoop, &QEventLoop::quit);
+    connect(helpTimer, &QTimer::timeout, helpLoop, &QEventLoop::quit);
 
     // Create help response button
     helpResponseButton = new QPushButton("Respond to help call");
     adminButtons << helpResponseButton;
-    QObject::connect(helpResponseButton, &QPushButton::clicked, [this]() {
+    connect(helpResponseButton, &QPushButton::clicked, [this]() {
         helpCallResponded = true;
         // Clear emergency state
         for(Elevator* e : elevators){
