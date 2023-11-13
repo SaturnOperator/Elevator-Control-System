@@ -2,29 +2,21 @@ FLAGS = -g -std=c++11
 
 all: qt
 
-qt:
-	mkdir -p build
-	qmake -o build/Makefile elevatorSimulator.pro
-	cd build && $(MAKE)
+# Install icons font, if this doesn't work you can remove from recipe and should still compile
+font:
+        mkdir -p ~/.fonts/
+        cp -p assets/fonts/fa-solid-900.ttf ~/.fonts/
+        fc-cache -f
+
+qt: font
+        mkdir -p build
+        qmake -o build/Makefile elevatorSimulator.pro
+        cd build && $(MAKE)
 
 run: qt
-	./build/elevatorSimulator.app/Contents/MacOS/elevatorSimulator
+#       ./build/elevatorSimulator.app/Contents/MacOS/elevatorSimulator
+        ./build/elevatorSimulator
 
 clean:
-	rm -rf build/*
-	rm -rf build
-
-# defs:
-# 	g++ $(FLAGS) -c defs.h
-
-# Display:
-# 	g++ $(FLAGS) -c Display.h
-
-# Elevator:
-# 	g++ $(FLAGS) -c Elevator.h
-
-# ElevatorControlSystem:
-# 	g++ $(FLAGS) -c ElevatorControlSystem.h
-
-# clean:
-# 	rm -rf Display Elevator ElevatorControlSystem *.o
+        rm -rf build/*
+        rm -rf build
